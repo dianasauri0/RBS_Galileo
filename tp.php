@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Interfaz con Inicio de Sesión y Roles</title>
+    <title>Página Principal</title>
     <style>
         body {
             margin: 0;
@@ -76,26 +76,6 @@
         #menuDropdown ul li a:hover {
             color: #555;
         }
-        /* Estilos del modal de inicio de sesión */
-        #loginModal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.5);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-        #loginModal .modal-content {
-            background-color: white;
-            padding: 20px;
-            border-radius: 8px;
-            width: 300px;
-            text-align: center;
-        }
     </style>
 </head>
 <body>
@@ -108,9 +88,13 @@
         </button>
     </div>
     <div class="header-right">
-        <button id="loginBtn" onclick="toggleLogin()">
+        <button id="loginBtn" onclick="window.location.href='login.php'">
             <span class="icon">&#128100;</span> 
             Iniciar Sesión
+        </button>
+        <button id="registerBtn" onclick="window.location.href='registro.php'">
+            <span class="icon">&#9997;</span> 
+            Registrarse
         </button>
         <button id="cartBtn" onclick="window.location.href='carrito.php'">
             <span class="icon">&#128722;</span> 
@@ -126,92 +110,10 @@
     </ul>
 </div>
 
-<!-- Formulario de Inicio de Sesión (Modal) -->
-<div id="loginModal">
-    <div class="modal-content">
-        <h2>Iniciar Sesión</h2>
-        <form id="loginForm" onsubmit="return loginUser()">
-            <div class="form-group">
-                <label for="username">Nombre de usuario</label>
-                <input type="text" id="username" name="username" required>
-            </div>
-            <div class="form-group">
-                <label for="password">Contraseña</label>
-                <input type="password" id="password" name="password" required>
-            </div>
-            <input type="submit" value="Iniciar Sesión">
-        </form>
-    </div>
-</div>
-
 <script>
     function toggleMenu() {
         var menu = document.getElementById("menuDropdown");
         menu.style.display = menu.style.display === "block" ? "none" : "block";
-    }
-
-    function toggleLogin() {
-        var loginModal = document.getElementById("loginModal");
-        loginModal.style.display = "flex";
-    }
-
-    function closeLoginModal() {
-        var loginModal = document.getElementById("loginModal");
-        loginModal.style.display = "none";
-    }
-
-    function loginUser() {
-        // Obtener los valores del formulario
-        var username = document.getElementById("username").value;
-        var password = document.getElementById("password").value;
-
-        // Aquí se debería hacer la autenticación real (esto es un simulacro)
-        // Supongamos que tenemos dos usuarios: admin y usuario
-        var rol = "";
-        if (username === "admin" && password === "admin123") {
-            rol = "admin";
-        } else if (username === "usuario" && password === "user123") {
-            rol = "usuario";
-        } else {
-            alert("Credenciales incorrectas");
-            return false;
-        }
-
-        // Guardar el rol del usuario
-        sessionStorage.setItem("rolUsuario", rol);
-
-        // Cambiar el botón de "Iniciar Sesión" a "Cerrar Sesión"
-        var loginBtn = document.getElementById("loginBtn");
-        loginBtn.innerHTML = '<span class="icon">&#128100;</span> Cerrar Sesión';
-        loginBtn.onclick = function() {
-            logoutUser();
-        };
-
-        // Cerrar el modal de inicio de sesión
-        closeLoginModal();
-
-        // Cargar las opciones del menú según el rol
-        cargarOpcionesMenu(rol);
-
-        return false; // Evitar que el formulario realice un submit real
-    }
-
-    function logoutUser() {
-        // Limpiar la sesión
-        sessionStorage.removeItem("rolUsuario");
-
-        // Cambiar el botón de vuelta a "Iniciar Sesión"
-        var loginBtn = document.getElementById("loginBtn");
-        loginBtn.innerHTML = '<span class="icon">&#128100;</span> Iniciar Sesión';
-        loginBtn.onclick = function() {
-            toggleLogin();
-        };
-
-        // Limpiar las opciones del menú
-        var menuOptions = document.getElementById("menuOptions");
-        menuOptions.innerHTML = '';
-
-        alert("Sesión cerrada");
     }
 
     function cargarOpcionesMenu(rol) {
@@ -240,7 +142,33 @@
             loginBtn.onclick = function() {
                 logoutUser();
             };
+
+            // Ocultar el botón de registro
+            var registerBtn = document.getElementById("registerBtn");
+            registerBtn.style.display = 'none';
         }
+    }
+
+    function logoutUser() {
+        // Limpiar la sesión
+        sessionStorage.removeItem("rolUsuario");
+
+        // Cambiar el botón de vuelta a "Iniciar Sesión"
+        var loginBtn = document.getElementById("loginBtn");
+        loginBtn.innerHTML = '<span class="icon">&#128100;</span> Iniciar Sesión';
+        loginBtn.onclick = function() {
+            window.location.href = 'login.php';
+        };
+
+        // Mostrar el botón de registro
+        var registerBtn = document.getElementById("registerBtn");
+        registerBtn.style.display = 'inline-block';
+
+        // Limpiar las opciones del menú
+        var menuOptions = document.getElementById("menuOptions");
+        menuOptions.innerHTML = '';
+
+        alert("Sesión cerrada");
     }
 </script>
 
