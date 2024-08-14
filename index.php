@@ -1,5 +1,22 @@
 <!DOCTYPE html>
 <html lang="es">
+<?php
+$servername = "sql312.byethost4.com";
+$username = "b4_36189857";
+$password = "name12341";
+$dbname = "b4_36189857_galileo";
+
+// Crear conexión
+$conn = new mysqli($servername, $username, $password, $dbname);
+
+// Verificar conexión
+if ($conn->connect_error) {
+    die("Conexión fallida: " . $conn->connect_error);
+}
+echo "Conectado exitosamente";
+
+$conn->close();
+?>
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
