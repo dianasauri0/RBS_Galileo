@@ -90,7 +90,7 @@
         sessionStorage.setItem("rolUsuario", rol);
 
         // Redirigir a la página principal después del inicio de sesión
-        window.location.href = 'index.html';
+        window.location.href = 'index.php';
         return false;
     }
 </script>
