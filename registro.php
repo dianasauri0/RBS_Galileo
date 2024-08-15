@@ -1,9 +1,9 @@
 <?php
 
 // Configuración de la base de datos
-$servername = "sql312.byethost4.com";
-$username = "b4_36189857";
-$password = "name12341";
+$servername = "127.0.0.1";
+$username = "root";
+$password = "root";
 $dbname = "b4_36189857_galileo";
 
 // Crear conexión
@@ -15,9 +15,9 @@ if ($conn->connect_error) {
 }
 
 // Obtener datos del formulario
-$input_username = $_POST['username'] ?? '';
-$input_password = $_POST['password'] ?? '';
-$input_confirm_password = $_POST['confirm_password'] ?? '';
+$input_username = trim(isset($_POST['username']) ? $_POST['username'] : '');
+$input_password = trim(isset($_POST['password']) ? $_POST['password'] : '');
+$input_confirm_password = trim(isset($_POST['confirm_password']) ? $_POST['confirm_password'] : '');
 
 // Verificar que las contraseñas coincidan
 if ($input_password !== $input_confirm_password) {
@@ -50,6 +50,10 @@ $stmt->bind_param("sss", $input_username, $hashed_password, $rol);
 
 if ($stmt->execute()) {
     echo json_encode(['success' => true, 'message' => 'Usuario registrado exitosamente']);
+    session_start();
+    $_SESSION['rol'] = $rol; // Guardar rol en la sesión
+    header('Location: login.html'); 
+    exit();
 } else {
     echo json_encode(['success' => false, 'message' => 'Error al registrar el usuario']);
 }

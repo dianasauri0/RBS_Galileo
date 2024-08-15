@@ -3,13 +3,13 @@
 session_start();
 
 // Datos de conexión a la base de datos
-$servername = "sql312.byethost4.com";
-$db_username = "b4_36189857";
-$db_password = "name12341";
+$servername = "127.0.0.1";
+$username = "root";
+$password = "root";
 $dbname = "b4_36189857_galileo";
 
 // Crear conexión
-$conn = new mysqli($servername, $db_username, $db_password, $dbname);
+$conn = new mysqli($servername, $username, $password, $dbname);
 
 // Verificar conexión
 if ($conn->connect_error) {
@@ -17,8 +17,8 @@ if ($conn->connect_error) {
 }
 
 // Obtener datos del formulario
-$input_username = trim($_POST['username'] ?? '');
-$input_password = trim($_POST['password'] ?? '');
+$input_username = trim(isset($_POST['username']) ? $_POST['username'] : '');
+$input_password = trim(isset($_POST['password']) ? $_POST['password'] : '');
 
 // Validar los datos del formulario
 if (empty($input_username) || empty($input_password)) {
