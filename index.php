@@ -3,11 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Página Principal</title>
+    <title>Cursos En Línea</title>
     <style>
         body {
             margin: 0;
             font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
         }
         header {
             display: flex;
@@ -47,7 +48,6 @@
             font-size: 20px;
             margin-right: 10px;
         }
-        /* Estilos del menú desplegable */
         #menuDropdown {
             position: absolute;
             top: 50px;
@@ -76,6 +76,47 @@
         #menuDropdown ul li a:hover {
             color: #555;
         }
+        .courses {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            padding: 20px;
+        }
+        .course {
+            background-color: white;
+            margin: 10px;
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            width: 250px;
+            text-align: center;
+        }
+        .course-title {
+            font-size: 18px;
+            margin-bottom: 10px;
+            color: #333;
+        }
+        .course-instructor {
+            color: #777;
+            margin-bottom: 15px;
+        }
+        .course-price {
+            font-size: 20px;
+            margin-bottom: 10px;
+            color: #007bff;
+        }
+        .course button {
+            background-color: #007bff;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        .course button:hover {
+            background-color: #0056b3;
+        }
     </style>
 </head>
 <body>
@@ -88,11 +129,11 @@
         </button>
     </div>
     <div class="header-right">
-        <button id="loginBtn" onclick="window.location.href='login.php'">
+        <button id="loginBtn" onclick="window.location.href='login.html'">
             <span class="icon">&#128100;</span> 
             Iniciar Sesión
         </button>
-        <button id="registerBtn" onclick="window.location.href='registro.php'">
+        <button id="registerBtn" onclick="window.location.href='registro.html'">
             <span class="icon">&#9997;</span> 
             Registrarse
         </button>
@@ -108,6 +149,28 @@
     <ul id="menuOptions">
         <!-- Aquí se agregarán las opciones según el rol -->
     </ul>
+</div>
+
+<!-- Lista de Cursos -->
+<div class="courses">
+    <div class="course">
+        <h3 class="course-title">HTML5, CSS3, JavaScript para Principiantes</h3>
+        <p class="course-instructor">Juan Pedro</p>
+        <p class="course-price">$15</p>
+        <button>AGREGAR AL CARRITO</button>
+    </div>
+    <div class="course">
+        <h3 class="course-title">Curso de Comida Vegetariana</h3>
+        <p class="course-instructor">Juan Pedro</p>
+        <p class="course-price">$15</p>
+        <button>AGREGAR AL CARRITO</button>
+    </div>
+    <div class="course">
+        <h3 class="course-title">Guitarra para Principiantes</h3>
+        <p class="course-instructor">Juan Pedro</p>
+        <p class="course-price">$15</p>
+        <button>AGREGAR AL CARRITO</button>
+    </div>
 </div>
 
 <script>
