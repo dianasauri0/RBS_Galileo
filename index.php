@@ -4,9 +4,9 @@
 session_start();
 
 // Configuración de la base de datos
-$servername = "127.0.0.1";
-$username = "root";
-$password = "root";
+$servername = "sql312.byethost4.com";
+$username = "b4_36189857";
+$password = "name12341";
 $dbname = "b4_36189857_galileo";
 
 // Crear conexión
@@ -52,10 +52,15 @@ if (isset($_GET['logout'])) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?php echo isset($_SESSION['usuario_id']) ? 'Página Principal' : 'Cursos En Línea'; ?></title>
     <style>
-        body {
+        html, body {
+            height: 100%;
             margin: 0;
+        }
+        body {
             font-family: Arial, sans-serif;
             background-color: #f4f4f4;
+            display: flex;
+            flex-direction: column;
         }
         header {
             display: flex;
@@ -123,6 +128,10 @@ if (isset($_GET['logout'])) {
         #menuDropdown ul li a:hover {
             color: #555;
         }
+        .container {
+            flex: 1; /* Esto hace que el contenedor crezca y ocupe el espacio restante */
+            padding: 20px;
+        }
         .courses {
             display: flex;
             flex-wrap: wrap;
@@ -143,10 +152,6 @@ if (isset($_GET['logout'])) {
             margin-bottom: 10px;
             color: #333;
         }
-        .course-instructor {
-            color: #777;
-            margin-bottom: 15px;
-        }
         .course-price {
             font-size: 20px;
             margin-bottom: 10px;
@@ -165,71 +170,97 @@ if (isset($_GET['logout'])) {
             background-color: #0056b3;
         }
         footer {
-            background-color: #333;
-            color: white;
-            padding: 40px 20px;
-        }
-        .footer-content {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: space-between;
-        }
-        .footer-section {
-            flex: 1;
-            min-width: 200px;
-            margin-right: 20px;
-        }
-        .footer-section h5 {
-            border-bottom: 2px solid #f4f4f4;
-            font-size: 1.8em;
-            padding-bottom: 10px;
-            margin-bottom: 20px;
-        }
-        .footer-section p {
-            margin: 10px 0;
-        }
-        .footer-section ul {
-            list-style: none;
-            padding: 0;
-        }
-        .footer-section ul li {
-            margin: 10px 0;
-        }
-        .footer-section ul li a {
-            color: #ddd;
-            text-decoration: none;
-        }
-        .footer-section ul li a:hover {
-            text-decoration: underline;
-        }
-        .social-icon {
-            display: block;
-            margin: 5px;
-        }
-        .social-media a {
-            margin-right: 15px;
-            color: #ddd;
-            text-decoration: none;
-            display: flex;
-            align-items: center;
-        }
-        .social-media i {
-            margin-right: 8px;
-        }
-        .social-media a:hover {
-            text-decoration: underline;
-        }
-        .footer-bottom {
-            text-align: center;
-            margin-top: 20px;
-        }
-        .footer-bottom a {
-            color: #ddd;
-            text-decoration: none;
-        }
-        .footer-bottom a:hover {
-            text-decoration: underline;
-        }
+    background-color: #111;
+    color: #ddd;
+    padding: 20px;
+    font-family: Arial, sans-serif;
+    width: 100%;
+    bottom: 0;
+    position: relative;
+    box-sizing: border-box; /* Asegura que el padding y el borde no aumenten el ancho total */
+}
+
+.footer-top {
+    border-bottom: 1px solid #444;
+    padding-bottom: 10px;
+}
+
+.footer-content {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    max-width: 100%; /* Asegura que el contenido no exceda el ancho del contenedor */
+    box-sizing: border-box;
+}
+
+.footer-section {
+    flex: 1;
+    min-width: 150px;
+    margin-right: 15px;
+    box-sizing: border-box;
+}
+
+.footer-section h5 {
+    border-bottom: 1px solid #888;
+    font-size: 1.2em;
+    padding-bottom: 5px;
+    margin-bottom: 10px;
+    color: #fff;
+}
+
+.footer-section p {
+    margin: 5px 0;
+    font-size: 14px;
+}
+
+.footer-section a {
+    color: #ddd;
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+.footer-section a:hover {
+    color: #fff;
+    text-decoration: underline;
+}
+
+.social-icon {
+    display: block;
+    margin: 5px 0;
+}
+
+.social-media a {
+    margin-right: 10px;
+    display: flex;
+    align-items: center;
+    font-size: 14px;
+}
+
+.social-media i {
+    margin-right: 6px;
+}
+
+.footer-bottom {
+    text-align: center;
+    padding-top: 10px;
+    border-top: 1px solid #444;
+}
+
+.footer-bottom p {
+    margin: 5px 0;
+    font-size: 14px;
+}
+
+.footer-bottom a {
+    color: #ddd;
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+.footer-bottom a:hover {
+    color: #fff;
+    text-decoration: underline;
+}
     </style>
 </head>
 <body>
@@ -271,95 +302,91 @@ if (isset($_GET['logout'])) {
         </button>
     </div>
 </header>
-</head>
 
-    <script>
-        function showLoginAlert() {
-            alert("Debes iniciar sesión para añadir productos al carrito.");
-        }
-    </script>
-
-<body>
 <!-- Lista de Productos -->
-<div class="Productos">
-<?php
-// Obtener los productos desde la base de datos
-$sql = "SELECT producto_id, descripcion, precio FROM productos";
-$result = $conn->query($sql);
+<div class="container">
+    <?php
+    // Obtener los productos desde la base de datos
+    $sql = "SELECT producto_id, descripcion, precio FROM productos";
+    $result = $conn->query($sql);
 
-if ($result->num_rows > 0) {
-    while($row = $result->fetch_assoc()) {
-        echo "<div class='Producto'>";
-        echo "<h3 class='Descripcion-Producto'>" . $row['descripcion'] . "</h3>";
-        echo "<p class='Precio-Producto'>$" . $row['precio'] . "</p>";
+    if ($result->num_rows > 0) {
+        while($row = $result->fetch_assoc()) {
+            echo "<div class='course'>";
+            echo "<h3 class='course-title'>" . $row['descripcion'] . "</h3>";
+            echo "<p class='course-price'>$" . $row['precio'] . "</p>";
 
-        // Mostrar el botón según el estado de la sesión
-        if (isset($_SESSION['usuario_id'])) {
-            echo "<button onclick='addToCart(" . $row['producto_id'] . ")'>Añadir al Carrito</button>";
-        } else {
-            echo "<button onclick='showLoginAlert()'>Añadir al Carrito</button>";
+            // Mostrar el botón según el estado de la sesión
+            if (isset($_SESSION['usuario_id'])) {
+                echo "<button onclick='addToCart(" . $row['producto_id'] . ")'>Añadir al Carrito</button>";
+            } else {
+                echo "<button onclick='showLoginAlert()'>Añadir al Carrito</button>";
+            }
+
+            echo "</div>";
         }
-
-        echo "</div>";
+    } else {
+        echo "<p>No hay productos disponibles.</p>";
     }
-} else {
-    echo "<p>No hay productos disponibles.</p>";
-}
-?>
+    ?>
 </div>
 
 <footer>
-    <div class="footer-content">
-        <div class="footer-section">
-            <h5>Sobre Nosotros</h5>
-            <p>Somos una plataforma dedicada a ofrecer cursos en línea de alta calidad.</p>
-        </div>
-        <div class="footer-section">
-            <h5>Enlaces</h5>
-            <ul>
-                <li><a href="#">Inicio</a></li>
-                <li><a href="#">Cursos</a></li>
-                <li><a href="#">Contacto</a></li>
-                <li><a href="#">Términos y Condiciones</a></li>
-            </ul>
-        </div>
-        <div class="footer-section">
-            <h5>Contacto</h5>
-            <p>Dirección: Calle Falsa 123, Ciudad, País</p>
-            <p>Teléfono: +123 456 7890</p>
-            <p>Email: info@ejemplo.com</p>
-        </div>
-        <div class="footer-section social-media">
-            <h5>Síguenos</h5>
-            <a href="#" class="social-icon"><i class="fa fa-facebook"></i> Facebook</a>
-            <a href="#" class="social-icon"><i class="fa fa-twitter"></i> Twitter</a>
-            <a href="#" class="social-icon"><i class="fa fa-instagram"></i> Instagram</a>
+    <div class="footer-top">
+        <div class="footer-content">
+            <div class="footer-section about">
+                <h5>Sobre Nosotros</h5>
+                <p>Mi Tienda Online es tu destino para las mejores ofertas en moda y accesorios. Estamos comprometidos a ofrecerte una experiencia de compra única y productos de alta calidad.</p>
+            </div>
+            <div class="footer-section help">
+                <h5>Ayuda</h5>
+                <p><a href="#faq">Preguntas Frecuentes</a></p>
+                <p><a href="#soporte">Soporte Técnico</a></p>
+                <p><a href="#envios">Política de Envíos</a></p>
+            </div>
+            <div class="footer-section contact">
+                <h5>Contacto</h5>
+                <p>Teléfono: +11 41929678</p>
+                <p>Email: <a href="mailto:contacto@mitiendaonline.com">contacto@mitiendaonline.com</a></p>
+            </div>
+            <div class="footer-section social-media">
+                <h5>Síguenos</h5>
+                <a href="https://facebook.com" target="_blank" class="social-icon"><i class="fab fa-facebook-f"></i> Facebook</a>
+                <a href="https://instagram.com" target="_blank" class="social-icon"><i class="fab fa-instagram"></i> Instagram</a>
+                <a href="https://twitter.com" target="_blank" class="social-icon"><i class="fab fa-twitter"></i> Twitter</a>
+                <a href="https://linkedin.com" target="_blank" class="social-icon"><i class="fab fa-linkedin-in"></i> LinkedIn</a>
+            </div>
         </div>
     </div>
     <div class="footer-bottom">
-        <p>&copy; 2024 Todos los derechos reservados. <a href="#">Política de Privacidad</a></p>
+        <p>&copy; 2024 Mi Tienda Online. Todos los derechos reservados.</p>
+        <p><a href="#">Términos y Condiciones</a> | <a href="#">Política de Privacidad</a></p>
     </div>
 </footer>
 
 <script>
-function toggleMenu() {
-    var menu = document.getElementById("menuDropdown");
-    menu.style.display = menu.style.display === "block" ? "none" : "block";
-}
-
-function handleLoginLogout() {
-    var isLoggedIn = <?php echo isset($_SESSION['usuario_id']) ? 'true' : 'false'; ?>;
-    if (isLoggedIn) {
-        window.location.href = 'index.php?logout=true';
-    } else {
-        window.location.href = 'login.html';
+    function toggleMenu() {
+        var menu = document.getElementById("menuDropdown");
+        menu.style.display = menu.style.display === "block" ? "none" : "block";
     }
-}
 
-function addToCart(productId) {
-    // Aquí puedes agregar el código para añadir el producto al carrito
-    alert('Producto ' + productId + ' añadido al carrito.');
-}
+    function handleLoginLogout() {
+        var isLoggedIn = <?php echo isset($_SESSION['usuario_id']) ? 'true' : 'false'; ?>;
+        if (isLoggedIn) {
+            window.location.href = 'index.php?logout=true';
+        } else {
+            window.location.href = 'login.html';
+        }
+    }
+
+    function addToCart(productId) {
+        // Aquí puedes agregar el código para añadir el producto al carrito
+        alert('Producto ' + productId + ' añadido al carrito.');
+    }
+
+    function showLoginAlert() {
+        alert('Debes iniciar sesión para añadir productos al carrito.');
+    }
 </script>
 
 </body>

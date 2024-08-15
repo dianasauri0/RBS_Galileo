@@ -3,13 +3,13 @@
 session_start();
 
 // Datos de conexión a la base de datos
-$servername = "127.0.0.1";
-$username = "root";
-$password = "root";
+$servername = "sql312.byethost4.com";
+$db_username = "b4_36189857";
+$db_password = "name12341";
 $dbname = "b4_36189857_galileo";
 
 // Crear conexión
-$conn = new mysqli($servername, $username, $password, $dbname);
+$conn = new mysqli($servername, $db_username, $db_password, $dbname);
 
 // Verificar conexión
 if ($conn->connect_error) {

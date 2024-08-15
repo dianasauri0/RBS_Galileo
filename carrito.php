@@ -1,3 +1,17 @@
+<?php
+session_start();
+
+// Verificar si el usuario está logueado
+if (!isset($_SESSION['usuario_id'])) {
+    // Redirigir a la página de inicio de sesión si no está logueado
+    header("Location: login.php");
+    exit();
+}
+
+// Obtener el rol del usuario
+$rol = $_SESSION['rol'];
+?>
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -114,22 +128,14 @@
             <span class="icon-slider">&#9776;</span> 
             Menú
         </button>
-        <button onclick="window.location.href='index.php'">
-            Inicio
-        </button>
+        <button onclick="window.location.href='index.php'">Inicio</button>
     </div>
     <div class="header-right">
-        <button id="loginBtn">
-            <span class="icon">&#128100;</span> 
-            Iniciar Sesión
-        </button>
-        <button id="registerBtn" onclick="window.location.href='registro.php'">
-            <span class="icon">&#9997;</span> 
-            Registrarse
+        <button id="loginBtn" onclick="logoutUser()">
+            <span class="icon">&#128100;</span> Cerrar Sesión
         </button>
         <button id="cartBtn" onclick="window.location.href='carrito.php'">
-            <span class="icon">&#128722;</span> 
-            Carrito
+            <span class="icon">&#128722;</span> Carrito
         </button>
     </div>
 </header>
@@ -137,19 +143,36 @@
 <!-- Menú desplegable -->
 <div id="menuDropdown">
     <ul id="menuOptions">
-        <!-- Aquí se agregarán las opciones según el rol -->
+        <?php if ($rol === 'admin'): ?>
+            <li><a href="dashboard.php">Panel de Control</a></li>
+            <li><a href="usuarios.php">Gestionar Usuarios</a></li>
+            <li><a href="productos.php">Gestionar Productos</a></li>
+        <?php elseif ($rol === 'usuario'): ?>
+            <li><a href="perfil.php">Mi Perfil</a></li>
+            <li><a href="mis_pedidos.php">Mis Pedidos</a></li>
+        <?php endif; ?>
     </ul>
 </div>
 
 <div class="container">
     <h1>Tu Carrito de Compras</h1>
-    
+
     <div id="cartContent">
-        <!-- Aquí se mostrarán los productos del carrito -->
-    </div>
-    
-    <div id="loginPrompt" style="display:none;">
-        <p>Por favor, <a href="login.php">inicia sesión</a> para ver tu carrito de compras.</p>
+        <?php
+        // Aquí deberías mostrar el contenido del carrito que está almacenado en la base de datos o en la sesión
+        // Ejemplo:
+        if (!empty($_SESSION['carrito'])) {
+            foreach ($_SESSION['carrito'] as $producto) {
+                echo "<div class='product'>";
+                echo "<span>{$producto['nombre']}</span>";
+                echo "<span>{$producto['precio']}</span>";
+                echo "<button onclick='eliminarProducto({$producto['id']})'>Eliminar</button>";
+                echo "</div>";
+            }
+        } else {
+            echo "<p>Tu carrito está vacío.</p>";
+        }
+        ?>
     </div>
 </div>
 
@@ -159,101 +182,8 @@
         menu.style.display = menu.style.display === "block" ? "none" : "block";
     }
 
-    function cargarOpcionesMenu(rol) {
-        var menuOptions = document.getElementById("menuOptions");
-        menuOptions.innerHTML = ''; // Limpiar el menú
-
-        if (rol === "admin") {
-            menuOptions.innerHTML += '<li><a href="dashboard.html">Panel de Control</a></li>';
-            menuOptions.innerHTML += '<li><a href="usuarios.html">Gestionar Usuarios</a></li>';
-            menuOptions.innerHTML += '<li><a href="productos.html">Gestionar Productos</a></li>';
-        } else if (rol === "usuario") {
-            menuOptions.innerHTML += '<li><a href="perfil.html">Mi Perfil</a></li>';
-            menuOptions.innerHTML += '<li><a href="mis_pedidos.html">Mis Pedidos</a></li>';
-        }
-    }
-
-    window.onload = function() {
-        var rol = sessionStorage.getItem("rolUsuario");
-
-        if (rol) {
-            // Mostrar el botón de "Cerrar Sesión" y ocultar "Registrarse"
-            var loginBtn = document.getElementById("loginBtn");
-            loginBtn.innerHTML = '<span class="icon">&#128100;</span> Cerrar Sesión';
-            loginBtn.onclick = function() {
-                logoutUser();
-            };
-
-            var registerBtn = document.getElementById("registerBtn");
-            registerBtn.style.display = 'none';
-
-            // Cargar opciones del menú según el rol
-            cargarOpcionesMenu(rol);
-
-            // Mostrar el contenido del carrito
-            document.getElementById('cartContent').style.display = 'block';
-            document.getElementById('loginPrompt').style.display = 'none';
-
-            cargarCarrito();
-        } else {
-            // Si no hay sesión iniciada, ocultar el botón de "Carrito"
-            document.getElementById('cartBtn').style.display = 'none';
-            document.getElementById('cartContent').style.display = 'none';
-            document.getElementById('loginPrompt').style.display = 'block';
-        }
-    }
-
-    function cargarCarrito() {
-        var carrito = JSON.parse(sessionStorage.getItem('carrito')) || [];
-        var cartContent = document.getElementById('cartContent');
-
-        if (carrito.length === 0) {
-            cartContent.innerHTML = '<p>Tu carrito está vacío.</p>';
-        } else {
-            cartContent.innerHTML = '';
-            carrito.forEach(function(producto, index) {
-                cartContent.innerHTML += `
-                    <div class="product">
-                        <span>${producto.nombre}</span>
-                        <span>${producto.precio}</span>
-                        <button onclick="eliminarProducto(${index})">Eliminar</button>
-                    </div>`;
-            });
-        }
-    }
-
-    function eliminarProducto(index) {
-        var carrito = JSON.parse(sessionStorage.getItem('carrito')) || [];
-        carrito.splice(index, 1);
-        sessionStorage.setItem('carrito', JSON.stringify(carrito));
-        cargarCarrito();
-    }
-
     function logoutUser() {
-        // Limpiar la sesión
-        sessionStorage.removeItem("rolUsuario");
-        sessionStorage.removeItem('carrito'); // Limpiar el carrito al cerrar sesión
-
-        // Cambiar el botón de vuelta a "Iniciar Sesión"
-        var loginBtn = document.getElementById("loginBtn");
-        loginBtn.innerHTML = '<span class="icon">&#128100;</span> Iniciar Sesión';
-        loginBtn.onclick = function() {
-            window.location.href = 'login.php';
-        };
-
-        // Mostrar el botón de registro y ocultar el botón de "Carrito"
-        var registerBtn = document.getElementById("registerBtn");
-        registerBtn.style.display = 'inline-block';
-
-        document.getElementById('cartBtn').style.display = 'none';
-        document.getElementById('cartContent').style.display = 'none';
-        document.getElementById('loginPrompt').style.display = 'block';
-
-        // Limpiar las opciones del menú
-        var menuOptions = document.getElementById("menuOptions");
-        menuOptions.innerHTML = '';
-
-        alert("Sesión cerrada");
+        window.location.href = 'logout.php'; // Redirigir a una página que maneje el logout en PHP
     }
 </script>
 

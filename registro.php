@@ -1,9 +1,9 @@
 <?php
 
 // Configuración de la base de datos
-$servername = "127.0.0.1";
-$username = "root";
-$password = "root";
+$servername = "sql312.byethost4.com";
+$username = "b4_36189857";
+$password = "name12341";
 $dbname = "b4_36189857_galileo";
 
 // Crear conexión
