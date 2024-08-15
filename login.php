@@ -1,99 +1,63 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Iniciar Sesión</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            margin: 0;
-            background-color: #f0f0f0;
-        }
-        .login-container {
-            background-color: white;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            width: 300px;
-            text-align: center;
-        }
-        .form-group {
-            margin-bottom: 15px;
-            text-align: left;
-        }
-        .form-group label {
-            display: block;
-            margin-bottom: 5px;
-        }
-        .form-group input {
-            width: 100%;
-            padding: 8px;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-        }
-        input[type="submit"] {
-            width: 100%;
-            padding: 10px;
-            border: none;
-            border-radius: 4px;
-            background-color: #333;
-            color: white;
-            font-size: 16px;
-            cursor: pointer;
-        }
-        input[type="submit"]:hover {
-            background-color: #555;
-        }
-    </style>
-</head>
-<body>
+<?php
+// Datos de conexión a la base de datos
+$servername = "sql312.byethost4.com";
+$db_username = "b4_36189857";
+$db_password = "name12341";
+$dbname = "b4_36189857_galileo";
 
-<div class="login-container">
-    <h2>Iniciar Sesión</h2>
-    <form id="loginForm" onsubmit="return loginUser()">
-        <div class="form-group">
-            <label for="username">Nombre de usuario</label>
-            <input type="text" id="username" name="username" required>
-        </div>
-        <div class="form-group">
-            <label for="password">Contraseña</label>
-            <input type="password" id="password" name="password" required>
-        </div>
-        <input type="submit" value="Iniciar Sesión">
-    </form>
-</div>
+// Crear conexión
+$conn = new mysqli($servername, $db_username, $db_password, $dbname);
 
-<script>
-    function loginUser() {
-        // Obtener los valores del formulario
-        var username = document.getElementById("username").value;
-        var password = document.getElementById("password").value;
+// Verificar conexión
+if ($conn->connect_error) {
+    die('Conexión fallida: ' . $conn->connect_error);
+}
 
-        // Aquí se debería hacer la autenticación real (esto es un simulacro)
-        // Supongamos que tenemos dos usuarios: admin y usuario
-        var rol = "";
-        if (username === "admin" && password === "admin123") {
-            rol = "admin";
-        } else if (username === "usuario" && password === "user123") {
-            rol = "usuario";
-        } else {
-            alert("Credenciales incorrectas");
-            return false;
-        }
+// Obtener datos del formulario
+$input_username = trim($_POST['username'] ?? '');
+$input_password = trim($_POST['password'] ?? '');
+//$rol = trim($_POST['rol'] ?? ''
+// Validar los datos del formulario
+if (empty($input_username) || empty($input_password)) {
+    echo '<script>alert("Nombre de usuario y contraseña son obligatorios"); window.location.href = "login.html";</script>';
+    exit();
+}
 
-        // Guardar el rol del usuario
-        sessionStorage.setItem("rolUsuario", rol);
+// Preparar la consulta SQL para obtener la contraseña del usuario
+$stmt = $conn->prepare("SELECT contrasenia FROM usuarios WHERE nombre = ?");
+if (!$stmt) {
+    die('Error en la preparación de la consulta: ' . $conn->error);
+}
 
-        // Redirigir a la página principal después del inicio de sesión
-        window.location.href = 'index.php';
-        return false;
+// Vincular el parámetro y ejecutar la consulta
+$stmt->bind_param("s", $input_username);
+$stmt->execute();
+$stmt->store_result();
+
+// Verificar si el usuario existe
+if ($stmt->num_rows > 0) {
+    // Vincular el resultado a una variable
+    $stmt->bind_result($hashed_password);
+    $stmt->fetch();
+
+    // Verificar la contraseña
+    if (password_verify($input_password, $hashed_password)) {
+        // Inicio de sesión exitoso
+        echo "Inicio de sesion exitoso";
+        session_start();
+        $_SESSION['rol'] = $rol; // Guardar rol en la sesión
+        header('Location: index.php'); // Redirigir a la página principal
+        exit();
+    } else {
+        // Contraseña incorrecta
+        echo '<script>alert("Contraseña incorrecta"); window.location.href = "login.html";</script>';
     }
-</script>
+} else {
+    // Nombre de usuario no encontrado
+    echo '<script>alert("Nombre de usuario no encontrado"); window.location.href = "login.html";</script>';
+}
 
-</body>
-</html>
+// Cerrar la declaración y la conexión
+$stmt->close();
+$conn->close();
+?>
