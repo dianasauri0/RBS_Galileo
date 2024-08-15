@@ -1,0 +1,13 @@
+-------------------
+WebSite
+fdex.netlify.app
+------------------
+Login Netlify
+
+User:k.monzon@galileo.edu.ar
+pass:Caca123Caca123
+
+-------------------
+Site id
+a77a0cee-fcae-40c8-86c2-b7244089748f
+
