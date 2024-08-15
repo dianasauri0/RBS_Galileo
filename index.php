@@ -4,9 +4,9 @@
 session_start();
 
 // Configuración de la base de datos
-$servername = "sql312.byethost4.com";
-$username = "b4_36189857";
-$password = "name12341";
+$servername = "127.0.0.1";
+$username = "root";
+$password = "root";
 $dbname = "b4_36189857_galileo";
 
 // Crear conexión
@@ -277,7 +277,7 @@ if (isset($_GET['logout'])) {
                 <?php if ($usuario_rol === 'admin'): ?>
                     <li><a href="perfil.php">Mi Perfil</a></li>
                     <li><a href="mis_pedidos.php">Mis Pedidos</a></li>
-                    <li><a href="gestionar_productos.php">Gestionar Productos</a></li>
+                    <li><a href="gestionar_productos.php">Gestionar Productos y Ventas</a></li>
                 <?php elseif ($usuario_rol === 'usuario'): ?>
                     <li><a href="perfil.php">Mi Perfil</a></li>
                     <li><a href="mis_pedidos.php">Mis Pedidos</a></li>
