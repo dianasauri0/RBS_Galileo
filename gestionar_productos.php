@@ -58,48 +58,68 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $product_name = $_POST['nombre'];
         $product_price = $_POST['precio'];
 
-        $query = "INSERT INTO productos (descripcion, precio) VALUES ('$product_name', '$product_price')";
-        if ($conn->query($query) === TRUE) {
+        $query = "INSERT INTO productos (descripcion, precio) VALUES (?, ?)";
+        $stmt = $conn->prepare($query);
+        $stmt->bind_param("sd", $product_name, $product_price);
+        if ($stmt->execute()) {
             $message = "Producto creado exitosamente.";
         } else {
-            $message = "Error al crear producto: " . $conn->error;
+            $message = "Error al crear producto: " . $stmt->error;
         }
+        $stmt->close();
     } elseif (isset($_POST['update'])) {
         // Actualizar producto existente
         $product_id = $_POST['id'];
         $product_name = $_POST['nombre'];
         $product_price = $_POST['precio'];
 
-        $query = "UPDATE productos SET descripcion='$product_name', precio='$product_price' WHERE producto_id=$product_id";
-        if ($conn->query($query) === TRUE) {
+        $query = "UPDATE productos SET descripcion=?, precio=? WHERE producto_id=?";
+        $stmt = $conn->prepare($query);
+        $stmt->bind_param("sdi", $product_name, $product_price, $product_id);
+        if ($stmt->execute()) {
             $message = "Producto actualizado exitosamente.";
         } else {
-            $message = "Error al actualizar producto: " . $conn->error;
+            $message = "Error al actualizar producto: " . $stmt->error;
         }
+        $stmt->close();
     }
+
+    // Redirigir a la misma página para evitar reenvío del formulario al refrescar
+    header("Location: gestionar_productos.php");
+    exit();
 }
 
 // Manejo de la acción de eliminar
 if (isset($_GET['delete'])) {
     $product_id = $_GET['delete'];
-    $query = "DELETE FROM productos WHERE producto_id = $product_id";
-    if ($conn->query($query) === TRUE) {
+    $query = "DELETE FROM productos WHERE producto_id = ?";
+    $stmt = $conn->prepare($query);
+    $stmt->bind_param("i", $product_id);
+    if ($stmt->execute()) {
         $message = "Producto eliminado exitosamente.";
     } else {
-        $message = "Error al eliminar producto: " . $conn->error;
+        $message = "Error al eliminar producto: " . $stmt->error;
     }
+    $stmt->close();
+    // Redirigir para evitar reenvío del formulario al refrescar
+    header("Location: gestionar_productos.php");
+    exit();
 }
 
 // Manejo de la acción de editar
 if (isset($_GET['edit'])) {
     $product_id = $_GET['edit'];
-    $query = "SELECT * FROM productos WHERE producto_id = $product_id";
-    $result = $conn->query($query);
+    $query = "SELECT * FROM productos WHERE producto_id = ?";
+    $stmt = $conn->prepare($query);
+    $stmt->bind_param("i", $product_id);
+    $stmt->execute();
+    $result = $stmt->get_result();
     if ($result->num_rows > 0) {
         $product = $result->fetch_assoc();
         $product_name = $product['descripcion'];
         $product_price = $product['precio'];
     }
+    $stmt->close();
 }
 ?>
 
@@ -146,11 +166,11 @@ if (isset($_GET['edit'])) {
         .header-right button:hover {
             color: #ccc;
         }
-        .header-right button:last-child {
+        .header-left button:last-child {
             margin-right: 0;
         }
-        .header-right button .icon {
-            margin-right: 5px;
+        .header-right button:last-child {
+            margin-right: 0;
         }
         .header-left button .icon-slider {
             font-size: 20px;
@@ -250,50 +270,42 @@ if (isset($_GET['edit'])) {
             width: 100%;
             bottom: 0;
             position: relative;
-            box-sizing: border-box; /* Asegura que el padding y el borde no aumenten el ancho total */
+            box-sizing: border-box;
         }
 
         .footer-top {
-            border-bottom: 1px solid #444;
-            padding-bottom: 10px;
+            margin-bottom: 20px;
         }
 
         .footer-content {
             display: flex;
-            flex-wrap: wrap;
             justify-content: space-between;
-            max-width: 100%; /* Asegura que el contenido no exceda el ancho del contenedor */
-            box-sizing: border-box;
         }
 
         .footer-section {
-            flex: 1;
-            min-width: 150px;
-            margin-right: 15px;
-            box-sizing: border-box;
+            width: 30%;
         }
 
         .footer-section h5 {
-            border-bottom: 1px solid #888;
-            font-size: 1.2em;
-            padding-bottom: 5px;
             margin-bottom: 10px;
+            font-size: 14px;
             color: #fff;
         }
 
         .footer-section p {
-            margin: 5px 0;
-            font-size: 14px;
+            margin: 0;
+            font-size: 12px;
         }
 
         .footer-section a {
             color: #ddd;
             text-decoration: none;
-            font-size: 14px;
+            font-size: 12px;
         }
 
         .footer-section a:hover {
             color: #fff;
+            text-decoration: underline;
         }
 
         .footer-bottom {
@@ -317,23 +329,39 @@ if (isset($_GET['edit'])) {
 
 <header>
     <div class="header-left">
-        <button onclick="toggleMenu()">
+        <button id="sliderBtn" onclick="toggleMenu()">
             <span class="icon-slider">&#9776;</span> Menu
+        </button>
+        <button id="homeBtn" onclick="window.location.href='index.php'">
+            Inicio
         </button>
         <div id="menuDropdown">
             <ul>
-                <li><a href="panel_control.php">Panel de Control</a></li>
-                <li><a href="gestionar_productos.php">Gestionar Productos</a></li>
-                <li><a href="gestionar_usuarios.php">Gestionar Usuarios</a></li>
+                <?php if ($usuario_rol === 'admin'): ?>
+                    <li><a href="perfil.php">Mi Perfil</a></li>
+                    <li><a href="mis_pedidos.php">Mis Pedidos</a></li>
+                    <li><a href="gestionar_productos.php">Gestionar Productos y Ventas</a></li>
+                <?php elseif ($usuario_rol === 'usuario'): ?>
+                    <li><a href="perfil.php">Mi Perfil</a></li>
+                    <li><a href="mis_pedidos.php">Mis Pedidos</a></li>
+                <?php endif; ?>
             </ul>
         </div>
     </div>
     <div class="header-right">
-        <button onclick="location.href='perfil.php'">
-            <span class="icon">&#128100;</span>Perfil
+        <button id="loginBtn" onclick="handleLoginLogout()">
+            <span class="icon">&#128100;</span> 
+            <?php echo isset($_SESSION['usuario_id']) ? 'Cerrar Sesión' : 'Iniciar Sesión'; ?>
         </button>
-        <button onclick="logout()">
-            <span class="icon">&#128682;</span>Logout
+        <?php if (!isset($_SESSION['usuario_id'])): ?>
+            <button id="registerBtn" onclick="window.location.href='registro.html'">
+                <span class="icon">&#9997;</span> 
+                Registrarse
+            </button>
+        <?php endif; ?>
+        <button id="cartBtn" onclick="window.location.href='carrito.php'" style="<?php echo isset($_SESSION['usuario_id']) ? 'display:inline-block;' : 'display:none;'; ?>">
+            <span class="icon">&#128722;</span> 
+            Carrito
         </button>
     </div>
 </header>
@@ -344,9 +372,9 @@ if (isset($_GET['edit'])) {
         <p class="message"><?= $message; ?></p>
     <?php endif; ?>
     <form method="POST" action="gestionar_productos.php">
-        <input type="hidden" name="id" value="<?= $product_id; ?>">
-        <input type="text" name="nombre" placeholder="Nombre del producto" value="<?= $product_name; ?>" required>
-        <input type="number" name="precio" placeholder="Precio del producto" step="0.01" value="<?= $product_price; ?>" required>
+        <input type="hidden" name="id" value="<?= htmlspecialchars($product_id); ?>">
+        <input type="text" name="nombre" placeholder="Nombre del producto" value="<?= htmlspecialchars($product_name); ?>" required>
+        <input type="number" name="precio" placeholder="Precio del producto" step="0.01" value="<?= htmlspecialchars($product_price); ?>" required>
         <?php if ($product_id): ?>
             <button type="submit" name="update">Actualizar Producto</button>
         <?php else: ?>
@@ -358,7 +386,7 @@ if (isset($_GET['edit'])) {
         <thead>
             <tr>
                 <th>ID</th>
-                <th>Nombre</th>
+                <th>Descripción</th>
                 <th>Precio</th>
                 <th>Acciones</th>
             </tr>
@@ -369,9 +397,9 @@ if (isset($_GET['edit'])) {
             while ($row = $result->fetch_assoc()):
             ?>
                 <tr>
-                    <td><?= $row['producto_id']; ?></td>
-                    <td><?= $row['descripcion']; ?></td>
-                    <td><?= $row['precio']; ?></td>
+                    <td><?= htmlspecialchars($row['producto_id']); ?></td>
+                    <td><?= htmlspecialchars($row['descripcion']); ?></td>
+                    <td><?= htmlspecialchars($row['precio']); ?></td>
                     <td>
                         <a href="gestionar_productos.php?edit=<?= $row['producto_id']; ?>">Editar</a>
                         <a href="gestionar_productos.php?delete=<?= $row['producto_id']; ?>" onclick="return confirm('¿Está seguro de que desea eliminar este producto?');">Eliminar</a>
@@ -409,8 +437,12 @@ if (isset($_GET['edit'])) {
 </footer>
 
 <script>
-    function logout() {
-        window.location.href = 'gestionar_productos.php?logout=true';
+    function handleLoginLogout() {
+        <?php if (isset($_SESSION['usuario_id'])): ?>
+            window.location.href = 'gestionar_productos.php?logout=true';
+        <?php else: ?>
+            window.location.href = 'login.php';
+        <?php endif; ?>
     }
 
     function toggleMenu() {
