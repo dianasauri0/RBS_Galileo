@@ -1,10 +1,11 @@
 <?php
+// Iniciar la sesión
 session_start();
 
-// Configuración de la base de datos
-$servername = "127.0.0.1";
-$username = "root";
-$password = "root";
+// Datos de conexión a la base de datos
+$servername = "sql312.byethost4.com";
+$username = "b4_36189857";
+$password = "name12341";
 $dbname = "b4_36189857_galileo";
 
 // Crear conexión
@@ -16,8 +17,9 @@ if ($conn->connect_error) {
 }
 
 // Verificar si el usuario está logueado y obtener el rol si es necesario
+$usuario_logueado = isset($_SESSION['usuario_id']);
 $usuario_rol = '';
-if (isset($_SESSION['usuario_id'])) {
+if ($usuario_logueado) {
     $usuario_id = $_SESSION['usuario_id'];
     
     // Consultar el rol del usuario en la base de datos
@@ -30,11 +32,16 @@ if (isset($_SESSION['usuario_id'])) {
         $row = $result->fetch_assoc();
         $usuario_rol = $row['rol'];
     } else {
-        echo "<script>alert('Usuario no encontrado.'); window.location.href='login.php';</script>";
-        exit();
+        $usuario_logueado = false; // Usuario no encontrado, considerarlo como no logueado
     }
 
     $stmt->close();
+}
+
+// Verificar si el usuario tiene permisos para acceder a esta página
+if (!$usuario_logueado || $usuario_rol !== 'administrador') {
+    header('Location: index.php');
+    exit();
 }
 
 // Manejar el logout
@@ -82,11 +89,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $message = "Error al actualizar producto: " . $stmt->error;
         }
         $stmt->close();
-    }
 
-    // Redirigir a la misma página para evitar reenvío del formulario al refrescar
-    header("Location: gestionar_productos.php");
-    exit();
+        // Redirigir a la misma página para evitar reenvío del formulario al refrescar
+        header("Location: gestionar_productos.php");
+        exit();
+    }
 }
 
 // Manejo de la acción de eliminar
@@ -118,6 +125,8 @@ if (isset($_GET['edit'])) {
         $product = $result->fetch_assoc();
         $product_name = $product['descripcion'];
         $product_price = $product['precio'];
+    } else {
+        $message = "Producto no encontrado.";
     }
     $stmt->close();
 }
@@ -129,7 +138,7 @@ if (isset($_GET['edit'])) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Gestión de Productos</title>
-    <style>
+   <style>
         html, body {
             height: 100%;
             margin: 0;
@@ -262,67 +271,6 @@ if (isset($_GET['edit'])) {
         a:hover {
             color: #0056b3;
         }
-        footer {
-            background-color: #111;
-            color: #ddd;
-            padding: 20px;
-            font-family: Arial, sans-serif;
-            width: 100%;
-            bottom: 0;
-            position: relative;
-            box-sizing: border-box;
-        }
-
-        .footer-top {
-            margin-bottom: 20px;
-        }
-
-        .footer-content {
-            display: flex;
-            justify-content: space-between;
-        }
-
-        .footer-section {
-            width: 30%;
-        }
-
-        .footer-section h5 {
-            margin-bottom: 10px;
-            font-size: 14px;
-            color: #fff;
-        }
-
-        .footer-section p {
-            margin: 0;
-            font-size: 12px;
-        }
-
-        .footer-section a {
-            color: #ddd;
-            text-decoration: none;
-            font-size: 12px;
-        }
-
-        .footer-section a:hover {
-            color: #fff;
-            text-decoration: underline;
-        }
-
-        .footer-bottom {
-            text-align: center;
-            margin-top: 10px;
-            font-size: 12px;
-        }
-
-        @media (max-width: 768px) {
-            .footer-content {
-                flex-direction: column;
-            }
-
-            .footer-section {
-                margin-bottom: 20px;
-            }
-        }
     </style>
 </head>
 <body>
@@ -337,32 +285,25 @@ if (isset($_GET['edit'])) {
         </button>
         <div id="menuDropdown">
             <ul>
-                <?php if ($usuario_rol === 'admin'): ?>
+                <?php if ($usuario_logueado && $usuario_rol === 'administrador'): ?>
                     <li><a href="perfil.php">Mi Perfil</a></li>
                     <li><a href="mis_pedidos.php">Mis Pedidos</a></li>
                     <li><a href="gestionar_productos.php">Gestionar Productos y Ventas</a></li>
-                <?php elseif ($usuario_rol === 'usuario'): ?>
-                    <li><a href="perfil.php">Mi Perfil</a></li>
-                    <li><a href="mis_pedidos.php">Mis Pedidos</a></li>
                 <?php endif; ?>
             </ul>
         </div>
     </div>
     <div class="header-right">
-        <button id="loginBtn" onclick="handleLoginLogout()">
-            <span class="icon">&#128100;</span> 
-            <?php echo isset($_SESSION['usuario_id']) ? 'Cerrar Sesión' : 'Iniciar Sesión'; ?>
-        </button>
-        <?php if (!isset($_SESSION['usuario_id'])): ?>
-            <button id="registerBtn" onclick="window.location.href='registro.html'">
-                <span class="icon">&#9997;</span> 
-                Registrarse
+        <?php if ($usuario_logueado && $usuario_rol === 'administrador'): ?>
+            <button id="loginBtn" onclick="handleLoginLogout()">
+                <span class="icon">&#128100;</span> 
+                <?php echo 'Cerrar Sesión'; ?>
+            </button>
+            <button id="cartBtn" onclick="window.location.href='carrito.php'" style="display:inline-block;">
+                <span class="icon">&#128722;</span> 
+                Carrito
             </button>
         <?php endif; ?>
-        <button id="cartBtn" onclick="window.location.href='carrito.php'" style="<?php echo isset($_SESSION['usuario_id']) ? 'display:inline-block;' : 'display:none;'; ?>">
-            <span class="icon">&#128722;</span> 
-            Carrito
-        </button>
     </div>
 </header>
 
@@ -386,7 +327,7 @@ if (isset($_GET['edit'])) {
         <thead>
             <tr>
                 <th>ID</th>
-                <th>Descripción</th>
+                <th>Nombre del Producto</th>
                 <th>Precio</th>
                 <th>Acciones</th>
             </tr>
@@ -410,38 +351,12 @@ if (isset($_GET['edit'])) {
     </table>
 </div>
 
-<footer>
-    <div class="footer-top">
-        <div class="footer-content">
-            <div class="footer-section">
-                <h5>Contact Us</h5>
-                <p>Email: support@example.com</p>
-                <p>Phone: +1 234 567 890</p>
-            </div>
-            <div class="footer-section">
-                <h5>Follow Us</h5>
-                <a href="#">Facebook</a><br>
-                <a href="#">Twitter</a><br>
-                <a href="#">Instagram</a>
-            </div>
-            <div class="footer-section">
-                <h5>Legal</h5>
-                <a href="#">Privacy Policy</a><br>
-                <a href="#">Terms of Service</a>
-            </div>
-        </div>
-    </div>
-    <div class="footer-bottom">
-        &copy; 2024 Your Company. All rights reserved.
-    </div>
-</footer>
-
 <script>
     function handleLoginLogout() {
-        <?php if (isset($_SESSION['usuario_id'])): ?>
-            window.location.href = 'gestionar_productos.php?logout=true';
+        <?php if ($usuario_logueado): ?>
+            window.location.href = 'index.php?logout=true';
         <?php else: ?>
-            window.location.href = 'login.php';
+            window.location.href = 'login.html';
         <?php endif; ?>
     }
 

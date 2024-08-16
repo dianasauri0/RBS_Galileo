@@ -1,12 +1,13 @@
 <!DOCTYPE html>
 <html lang="es">
 <?php
+
 session_start();
 
 // Configuración de la base de datos
-$servername = "127.0.0.1";
-$username = "root";
-$password = "root";
+$servername = "sql312.byethost4.com";
+$username = "b4_36189857";
+$password = "name12341";
 $dbname = "b4_36189857_galileo";
 
 // Crear conexión
@@ -14,12 +15,16 @@ $conn = new mysqli($servername, $username, $password, $dbname);
 
 // Verificar la conexión
 if ($conn->connect_error) {
-    die("Conexión fallida: " . $conn->connect_error);
+    echo "Conexión fallida: " . $conn->connect_error;
+    exit();
 }
 
 // Verificar si el usuario está logueado y obtener el rol si es necesario
-$usuario_rol = '';
+$usuario_rol = 'cliente'; // Valor por defecto para usuarios no logueados
+$usuario_logueado = false;
+
 if (isset($_SESSION['usuario_id'])) {
+    $usuario_logueado = true;
     $usuario_id = $_SESSION['usuario_id'];
     
     // Consultar el rol del usuario en la base de datos
@@ -32,8 +37,10 @@ if (isset($_SESSION['usuario_id'])) {
         $row = $result->fetch_assoc();
         $usuario_rol = $row['rol'];
     } else {
-        echo "<script>alert('Usuario no encontrado.'); window.location.href='login.php';</script>";
-        exit();
+        // Si el usuario no se encuentra, se maneja con una alerta y se limpia la sesión
+        session_unset();
+        session_destroy();
+        $usuario_logueado = false; // Actualizar el estado de logueo
     }
 
     $stmt->close();
@@ -50,8 +57,9 @@ if (isset($_GET['logout'])) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title><?php echo isset($_SESSION['usuario_id']) ? 'Página Principal' : 'Cursos En Línea'; ?></title>
+    <title><?php echo $usuario_logueado ? 'Página Principal' : 'Cursos En Línea'; ?></title>
     <style>
+        /* Aquí va el estilo CSS proporcionado */
         html, body {
             height: 100%;
             margin: 0;
@@ -170,97 +178,83 @@ if (isset($_GET['logout'])) {
             background-color: #0056b3;
         }
         footer {
-    background-color: #111;
-    color: #ddd;
-    padding: 20px;
-    font-family: Arial, sans-serif;
-    width: 100%;
-    bottom: 0;
-    position: relative;
-    box-sizing: border-box; /* Asegura que el padding y el borde no aumenten el ancho total */
-}
-
-.footer-top {
-    border-bottom: 1px solid #444;
-    padding-bottom: 10px;
-}
-
-.footer-content {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: space-between;
-    max-width: 100%; /* Asegura que el contenido no exceda el ancho del contenedor */
-    box-sizing: border-box;
-}
-
-.footer-section {
-    flex: 1;
-    min-width: 150px;
-    margin-right: 15px;
-    box-sizing: border-box;
-}
-
-.footer-section h5 {
-    border-bottom: 1px solid #888;
-    font-size: 1.2em;
-    padding-bottom: 5px;
-    margin-bottom: 10px;
-    color: #fff;
-}
-
-.footer-section p {
-    margin: 5px 0;
-    font-size: 14px;
-}
-
-.footer-section a {
-    color: #ddd;
-    text-decoration: none;
-    transition: color 0.3s ease;
-}
-
-.footer-section a:hover {
-    color: #fff;
-    text-decoration: underline;
-}
-
-.social-icon {
-    display: block;
-    margin: 5px 0;
-}
-
-.social-media a {
-    margin-right: 10px;
-    display: flex;
-    align-items: center;
-    font-size: 14px;
-}
-
-.social-media i {
-    margin-right: 6px;
-}
-
-.footer-bottom {
-    text-align: center;
-    padding-top: 10px;
-    border-top: 1px solid #444;
-}
-
-.footer-bottom p {
-    margin: 5px 0;
-    font-size: 14px;
-}
-
-.footer-bottom a {
-    color: #ddd;
-    text-decoration: none;
-    transition: color 0.3s ease;
-}
-
-.footer-bottom a:hover {
-    color: #fff;
-    text-decoration: underline;
-}
+            background-color: #111;
+            color: #ddd;
+            padding: 20px;
+            font-family: Arial, sans-serif;
+            width: 100%;
+            bottom: 0;
+            position: relative;
+            box-sizing: border-box; /* Asegura que el padding y el borde no aumenten el ancho total */
+        }
+        .footer-top {
+            border-bottom: 1px solid #444;
+            padding-bottom: 10px;
+        }
+        .footer-content {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            max-width: 100%; /* Asegura que el contenido no exceda el ancho del contenedor */
+            box-sizing: border-box;
+        }
+        .footer-section {
+            flex: 1;
+            min-width: 150px;
+            margin-right: 15px;
+            box-sizing: border-box;
+        }
+        .footer-section h5 {
+            border-bottom: 1px solid #888;
+            font-size: 1.2em;
+            padding-bottom: 5px;
+            margin-bottom: 10px;
+            color: #fff;
+        }
+        .footer-section p {
+            margin: 5px 0;
+            font-size: 14px;
+        }
+        .footer-section a {
+            color: #ddd;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+        .footer-section a:hover {
+            color: #fff;
+            text-decoration: underline;
+        }
+        .social-icon {
+            display: block;
+            margin: 5px 0;
+        }
+        .social-media a {
+            margin-right: 10px;
+            display: flex;
+            align-items: center;
+            font-size: 14px;
+        }
+        .social-media i {
+            margin-right: 6px;
+        }
+        .footer-bottom {
+            text-align: center;
+            padding-top: 10px;
+            border-top: 1px solid #444;
+        }
+        .footer-bottom p {
+            margin: 5px 0;
+            font-size: 14px;
+        }
+        .footer-bottom a {
+            color: #ddd;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+        .footer-bottom a:hover {
+            color: #fff;
+            text-decoration: underline;
+        }
     </style>
 </head>
 <body>
@@ -274,13 +268,17 @@ if (isset($_GET['logout'])) {
 
         <div id="menuDropdown">
             <ul id="menuOptions">
-                <?php if ($usuario_rol === 'admin'): ?>
+                <?php if ($usuario_logueado && $usuario_rol === 'administrador'): ?>
                     <li><a href="perfil.php">Mi Perfil</a></li>
                     <li><a href="mis_pedidos.php">Mis Pedidos</a></li>
                     <li><a href="gestionar_productos.php">Gestionar Productos y Ventas</a></li>
-                <?php elseif ($usuario_rol === 'usuario'): ?>
+                <?php elseif ($usuario_logueado && $usuario_rol === 'cliente'): ?>
                     <li><a href="perfil.php">Mi Perfil</a></li>
                     <li><a href="mis_pedidos.php">Mis Pedidos</a></li>
+                <?php else: ?>
+                    <!-- Opciones disponibles para usuarios no logueados -->
+                    <li><a href="login.html">Iniciar Sesión</a></li>
+                    <li><a href="registro.html">Registrarse</a></li>
                 <?php endif; ?>
             </ul>
         </div>
@@ -288,9 +286,9 @@ if (isset($_GET['logout'])) {
     <div class="header-right">
         <button id="loginBtn" onclick="handleLoginLogout()">
             <span class="icon">&#128100;</span> 
-            <?php echo isset($_SESSION['usuario_id']) ? 'Cerrar Sesión' : 'Iniciar Sesión'; ?>
+            <?php echo $usuario_logueado ? 'Cerrar Sesión' : 'Iniciar Sesión'; ?>
         </button>
-        <?php if (!isset($_SESSION['usuario_id'])): ?>
+        <?php if (!$usuario_logueado): ?>
             <button id="registerBtn" onclick="window.location.href='registro.html'">
                 <span class="icon">&#9997;</span> 
                 Registrarse
@@ -313,12 +311,15 @@ if (isset($_GET['logout'])) {
     if ($result->num_rows > 0) {
         while($row = $result->fetch_assoc()) {
             echo "<div class='course'>";
-            echo "<h3 class='course-title'>" . $row['descripcion'] . "</h3>";
-            echo "<p class='course-price'>$" . $row['precio'] . "</p>";
+            echo "<h3 class='course-title'>" . htmlspecialchars($row['descripcion']) . "</h3>";
+            echo "<p class='course-price'>$" . htmlspecialchars($row['precio']) . "</p>";
 
             // Mostrar el botón según el estado de la sesión
-            if (isset($_SESSION['usuario_id'])) {
-                echo "<button onclick='addToCart(" . $row['producto_id'] . ")'>Añadir al Carrito</button>";
+            if ($usuario_logueado) {
+                echo "<form method='POST' action='agregar_al_carrito.php' style='display:inline;'>";
+                echo "<input type='hidden' name='producto_id' value='" . htmlspecialchars($row['producto_id']) . "'>";
+                echo "<button type='submit'>Añadir al Carrito</button>";
+                echo "</form>";
             } else {
                 echo "<button onclick='showLoginAlert()'>Añadir al Carrito</button>";
             }
@@ -340,9 +341,9 @@ if (isset($_GET['logout'])) {
             </div>
             <div class="footer-section help">
                 <h5>Ayuda</h5>
-                <p><a href="#faq">Preguntas Frecuentes</a></p>
-                <p><a href="#soporte">Soporte Técnico</a></p>
-                <p><a href="#envios">Política de Envíos</a></p>
+                <p><a href="preguntas.html">Preguntas Frecuentes</a></p>
+                <p><a href="stecnico.html">Soporte Técnico</a></p>
+                <p><a href="privacidad.html">Política de Privacidad</a></p> <!-- Actualizado a Política de Privacidad -->
             </div>
             <div class="footer-section contact">
                 <h5>Contacto</h5>
@@ -360,7 +361,7 @@ if (isset($_GET['logout'])) {
     </div>
     <div class="footer-bottom">
         <p>&copy; 2024 Mi Tienda Online. Todos los derechos reservados.</p>
-        <p><a href="#">Términos y Condiciones</a> | <a href="#">Política de Privacidad</a></p>
+        <p><a href="#">Términos y Condiciones</a> | <a href="politica.html">Política de Privacidad</a></p> <!-- Actualizado -->
     </div>
 </footer>
 
@@ -371,7 +372,7 @@ if (isset($_GET['logout'])) {
     }
 
     function handleLoginLogout() {
-        var isLoggedIn = <?php echo isset($_SESSION['usuario_id']) ? 'true' : 'false'; ?>;
+        var isLoggedIn = <?php echo $usuario_logueado ? 'true' : 'false'; ?>;
         if (isLoggedIn) {
             window.location.href = 'index.php?logout=true';
         } else {
@@ -379,14 +380,38 @@ if (isset($_GET['logout'])) {
         }
     }
 
-    function addToCart(productId) {
-        // Aquí puedes agregar el código para añadir el producto al carrito
-        alert('Producto ' + productId + ' añadido al carrito.');
-    }
-
     function showLoginAlert() {
         alert('Debes iniciar sesión para añadir productos al carrito.');
     }
+
+    function addToCart(productId) {
+        var xhr = new XMLHttpRequest();
+        xhr.open('POST', 'agregar_al_carrito.php', true);
+        xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+        xhr.onreadystatechange = function () {
+            if (xhr.readyState === 4 && xhr.status === 200) {
+                var response = JSON.parse(xhr.responseText);
+                var messageDiv = document.getElementById('message');
+                messageDiv.style.display = 'block';
+                messageDiv.style.borderColor = response.status === 'success' ? 'green' : 'red';
+                messageDiv.textContent = response.message;
+                if (response.status === 'success') {
+                    setTimeout(function() {
+                        messageDiv.style.display = 'none';
+                    }, 3000); // Ocultar el mensaje después de 3 segundos
+                }
+            }
+        };
+        xhr.send('producto_id=' + encodeURIComponent(productId));
+    }
+
+    document.querySelectorAll('form').forEach(function(form) {
+        form.addEventListener('submit', function(e) {
+            e.preventDefault(); // Evitar el envío del formulario
+            var productoId = this.querySelector('input[name="producto_id"]').value;
+            addToCart(productoId);
+        });
+    });
 </script>
 
 </body>

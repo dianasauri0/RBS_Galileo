@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Preguntas Frecuentes - Tienda de Ropa</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+        .container {
+            width: 80%;
+            margin: auto;
+            overflow: hidden;
+        }
+        header {
+            background: #333;
+            color: #fff;
+            padding: 1rem 0;
+            text-align: center;
+        }
+        .faq {
+            background: #fff;
+            padding: 2rem;
+            margin-top: 1rem;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        .faq h2 {
+            text-align: center;
+            margin-bottom: 1.5rem;
+        }
+        .faq-item {
+            margin-bottom: 1rem;
+        }
+        .faq-item h3 {
+            background: #333;
+            color: #fff;
+            padding: 1rem;
+            margin: 0;
+            cursor: pointer;
+            border-radius: 4px;
+        }
+        .faq-item p {
+            display: none;
+            padding: 1rem;
+            background: #f4f4f4;
+            margin: 0;
+            border-radius: 4px;
+        }
+        .faq-item.active p {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="container">
+            <h1>Preguntas Frecuentes</h1>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="faq">
+            <h2>Preguntas Frecuentes</h2>
+
+            <div class="faq-item">
+                <h3>¿Cuáles son los métodos de pago aceptados?</h3>
+                <p>Aceptamos pagos con tarjeta de crédito, tarjeta de débito, PayPal y transferencia bancaria.</p>
+            </div>
+
+            <div class="faq-item">
+                <h3>¿Cómo puedo hacer un seguimiento de mi pedido?</h3>
+                <p>Una vez que tu pedido haya sido enviado, recibirás un correo electrónico con un número de seguimiento y un enlace para rastrear el estado de tu envío.</p>
+            </div>
+
+            <div class="faq-item">
+                <h3>¿Puedo devolver un artículo?</h3>
+                <p>Sí, aceptamos devoluciones dentro de los 30 días posteriores a la recepción del pedido. El artículo debe estar en su estado original y sin usar. Para iniciar una devolución, por favor contáctanos a través de nuestro formulario de contacto.</p>
+            </div>
+
+            <div class="faq-item">
+                <h3>¿Ofrecen envíos internacionales?</h3>
+                <p>Sí, realizamos envíos a nivel internacional. Los costos de envío y los tiempos de entrega varían según el destino.</p>
+            </div>
+
+            <div class="faq-item">
+                <h3>¿Cómo puedo contactar con el servicio de atención al cliente?</h3>
+                <p>Puedes ponerte en contacto con nuestro equipo de atención al cliente a través del formulario de contacto en nuestro sitio web o enviando un correo electrónico a soporte@tiendaderopa.com.</p>
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+        // Script para mostrar y ocultar respuestas
+        document.querySelectorAll('.faq-item h3').forEach((item) => {
+            item.addEventListener('click', () => {
+                const parent = item.parentElement;
+                parent.classList.toggle('active');
+            });
+        });
+    </script>
+
+</body>
+</html>

@@ -44,7 +44,7 @@ if ($user_count > 0) {
 $hashed_password = password_hash($input_password, PASSWORD_DEFAULT);
 
 // Insertar nuevo usuario
-$rol="usuario";
+$rol="cliente";
 $stmt = $conn->prepare("INSERT INTO usuarios (nombre, contrasenia, rol) VALUES (?, ?, ?)");
 $stmt->bind_param("sss", $input_username, $hashed_password, $rol);
 
