@@ -1,10 +1,10 @@
 <?php
 
 // Configuración de la base de datos
-$servername = "sql312.byethost4.com";
-$username = "b4_36189857";
-$password = "name12341";
-$dbname = "b4_36189857_galileo";
+$servername = "sql110.infinityfree.com";
+$username = "if0_37108824";
+$password = "BjpIYhEjhN";
+$dbname = "if0_37108824_fdex";
 
 // Crear conexión
 $conn = new mysqli($servername, $username, $password, $dbname);

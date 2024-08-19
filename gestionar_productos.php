@@ -3,10 +3,10 @@
 session_start();
 
 // Datos de conexión a la base de datos
-$servername = "sql312.byethost4.com";
-$username = "b4_36189857";
-$password = "name12341";
-$dbname = "b4_36189857_galileo";
+$servername = "sql110.infinityfree.com";
+$username = "if0_37108824";
+$password = "BjpIYhEjhN";
+$dbname = "if0_37108824_fdex";
 
 // Crear conexión
 $conn = new mysqli($servername, $username, $password, $dbname);
@@ -137,7 +137,8 @@ if (isset($_GET['edit'])) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gestión de Productos</title>
+    <title>FDEX - Gestión de Productos</title>
+    <link rel="icon" href="F.png" type="image/x-icon"> <!-- Favicon -->
    <style>
         html, body {
             height: 100%;
@@ -147,107 +148,147 @@ if (isset($_GET['edit'])) {
             display: flex;
             flex-direction: column;
         }
-        header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 10px 20px;
-            background-color: #333;
-            color: white;
-        }
-        .header-left,
-        .header-right {
-            display: flex;
-            align-items: center;
-        }
-        .header-left button,
-        .header-right button {
-            background-color: transparent;
-            border: none;
-            color: white;
-            cursor: pointer;
-            font-size: 16px;
-            margin-right: 15px;
-            display: flex;
-            align-items: center;
-        }
-        .header-left button:hover,
-        .header-right button:hover {
-            color: #ccc;
-        }
-        .header-left button:last-child {
-            margin-right: 0;
-        }
-        .header-right button:last-child {
-            margin-right: 0;
-        }
-        .header-left button .icon-slider {
-            font-size: 20px;
-            margin-right: 10px;
-        }
-        #menuDropdown {
-            position: absolute;
-            top: 50px;
-            left: 20px;
-            background-color: #fff;
-            color: #333;
-            border-radius: 4px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            display: none;
-        }
-        #menuDropdown ul {
-            list-style: none;
-            padding: 10px;
-            margin: 0;
-        }
-        #menuDropdown ul li {
-            margin-bottom: 10px;
-        }
-        #menuDropdown ul li:last-child {
-            margin-bottom: 0;
-        }
-        #menuDropdown ul li a {
-            text-decoration: none;
-            color: #333;
-        }
-        #menuDropdown ul li a:hover {
-            color: #555;
-        }
+
+        /* Estilos del encabezado */
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 20px;
+    background-color: #212529; /* Fondo oscuro */
+    color: #dee2e6; /* Texto claro */
+}
+
+.header-left, .header-right {
+    display: flex;
+    align-items: center;
+}
+
+.header-left button,
+.header-right button {
+    background-color: #e85d04; /* Naranja vibrante */
+    border: none;
+    color: #dee2e6; /* Texto claro */
+    cursor: pointer;
+    font-size: 16px;
+    margin-right: 15px;
+    display: flex;
+    align-items: center;
+    padding: 10px 20px;
+    border-radius: 5px;
+    transition: background-color 0.3s ease;
+}
+
+.header-left button:hover,
+.header-right button:hover {
+    background-color: #c84e01; /* Naranja más oscuro para el hover */
+}
+
+.header-center {
+    flex: 1;
+    text-align: center;
+}
+
+.logo {
+    height: 50px; /* Ajusta la altura del logo según sea necesario */
+    max-width: 100%;
+}
+
+.header-right button:last-child {
+    margin-right: 0;
+}
+
+.header-right button .icon {
+    margin-right: 5px;
+}
+
+#menuDropdown {
+    position: absolute;
+    top: 60px;
+    left: 20px;
+    background-color: #212529; /* Fondo oscuro */
+    color: #dee2e6; /* Texto claro */
+    border-radius: 4px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    display: none;
+}
+
+#menuDropdown ul {
+    list-style: none;
+    padding: 10px;
+    margin: 0;
+}
+
+#menuDropdown ul li {
+    margin-bottom: 10px;
+}
+
+#menuDropdown ul li:last-child {
+    margin-bottom: 0;
+}
+
+#menuDropdown ul li a {
+    text-decoration: none;
+    color: #dee2e6; /* Texto claro */
+    transition: color 0.3s ease;
+}
+
+#menuDropdown ul li a:hover {
+    color: #e85d04; /* Naranja vibrante */
+}
+
         .container {
             flex: 1; /* Esto hace que el contenedor crezca y ocupe el espacio restante */
             padding: 20px;
+            background-color: #fff; /* Fondo blanco */
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
         }
+
+        /* Centrar el título */
+        h1 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
         table {
             width: 100%;
             border-collapse: collapse;
             margin: 20px 0;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
             background-color: #fff;
-        }
-        table, th, td {
             border: 1px solid #ddd;
-            padding: 8px;
-            text-align: left;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
         }
+
         th {
-            background-color: #007bff;
-            color: white;
+            background-color: #212529; /* Fondo oscuro */
+            color: #dee2e6; /* Texto claro */
+            padding: 10px;
         }
+
+        td {
+            padding: 10px;
+            border-top: 1px solid #ddd;
+            text-align: center; /* Centra el contenido de la celda */
+        }
+
         form {
             margin-bottom: 20px;
-            background-color: #fff;
+            background-color: #f8f9fa; /* Fondo gris claro */
             padding: 20px;
             border-radius: 8px;
             box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
         }
+
         input[type="text"], input[type="number"] {
             padding: 8px;
             margin-right: 10px;
             border: 1px solid #ddd;
             border-radius: 4px;
         }
+
         button[type="submit"] {
-            background-color: #007bff;
+            background-color: #007bff; /* Azul primario */
             color: white;
             padding: 10px 15px;
             border: none;
@@ -255,57 +296,118 @@ if (isset($_GET['edit'])) {
             cursor: pointer;
             font-size: 16px;
         }
+
         button[type="submit"]:hover {
-            background-color: #0056b3;
+            background-color: #0056b3; /* Azul más oscuro */
         }
+
         .message {
-            color: green;
+            color: #28a745; /* Verde para mensajes de éxito */
             font-weight: bold;
             margin-bottom: 20px;
         }
+
         a {
             text-decoration: none;
-            color: #007bff;
+            color: #007bff; /* Azul primario */
             margin-right: 10px;
         }
+
         a:hover {
-            color: #0056b3;
+            color: #0056b3; /* Azul más oscuro */
         }
+
+        button.action-button {
+    background-color: #e85d04; /* Naranja vibrante */
+    color: #fff; /* Texto blanco */
+    border: none;
+    padding: 5px 10px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 14px;
+    margin: 0 5px;
+    transition: background-color 0.3s ease;
+    text-align: center;
+}
+
+button.action-button:hover {
+    background-color: #c84e01; /* Naranja más oscuro para el hover */
+}
+
+/* Estilos para los botones de acción en el formulario */
+form button[type="submit"] {
+    background-color: #e85d04; /* Naranja vibrante */
+    color: #fff; /* Texto blanco */
+    border: none;
+    padding: 10px 15px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s ease;
+}
+
+form button[type="submit"]:hover {
+    background-color: #c84e01; /* Naranja más oscuro */
+}
+
+/* Asegura que los enlaces en las celdas estén centrados */
+td a {
+    display: inline-block;
+    margin: 0 5px;
+    text-decoration: none;
+    color: #fff;
+}
+
     </style>
 </head>
 <body>
 
 <header>
-    <div class="header-left">
-        <button id="sliderBtn" onclick="toggleMenu()">
-            <span class="icon-slider">&#9776;</span> Menu
-        </button>
-        <button id="homeBtn" onclick="window.location.href='index.php'">
-            Inicio
-        </button>
-        <div id="menuDropdown">
-            <ul>
+        <div class="header-left">                                                      <!--Header parte izquierda-->
+            <button id="sliderBtn" onclick="toggleMenu()">
+                <span class="icon-slider">&#9776;</span> 
+                Menú
+            </button>
+            <div id="menuDropdown">
+            <ul id="menuOptions">
                 <?php if ($usuario_logueado && $usuario_rol === 'administrador'): ?>
-                    <li><a href="perfil.php">Mi Perfil</a></li>
-                    <li><a href="mis_pedidos.php">Mis Pedidos</a></li>
-                    <li><a href="gestionar_productos.php">Gestionar Productos y Ventas</a></li>
+                    <li><a href="pedidos.php">Mis pedidos</a></li>
+                    <li><a href="clientes.php">Gestionar Clientes</a></li>
+                    <li><a href="gestionar_productos.php">Gestionar Productos</a></li>
+                <?php elseif ($usuario_logueado && $usuario_rol === 'cliente'): ?>
+                    <li><a href="pedidos.php">Mis pedidos</a></li>
+                <?php else: ?>
+                    <!-- Opciones disponibles para usuarios no logueados -->
+                    <li><a href="login.html">Iniciar Sesión</a></li>
+                    <li><a href="registro.html">Registrarse</a></li>
                 <?php endif; ?>
             </ul>
+            </div>
         </div>
-    </div>
-    <div class="header-right">
-        <?php if ($usuario_logueado && $usuario_rol === 'administrador'): ?>
+
+        <div class="header-center">                                                     <!-- Logo en el centro -->
+            <a href="index.php">
+                <img src="FDEX.png" alt="Logo" class="logo">
+            </a>
+        </div>
+
+        <div class="header-right">                                                     <!--Header parte derecha-->
             <button id="loginBtn" onclick="handleLoginLogout()">
                 <span class="icon">&#128100;</span> 
-                <?php echo 'Cerrar Sesión'; ?>
+                <?php echo $usuario_logueado ? 'Cerrar Sesión' : 'Iniciar Sesión'; ?>
             </button>
-            <button id="cartBtn" onclick="window.location.href='carrito.php'" style="display:inline-block;">
+            <?php if (!$usuario_logueado): ?>
+                <button id="registerBtn" onclick="window.location.href='registro.html'">
+                    <span class="icon">&#9997;</span> 
+                    Registrarse
+                </button>
+            <?php endif; ?>
+            <button id="cartBtn" onclick="window.location.href='carrito.php'" style="<?php echo isset($_SESSION['usuario_id']) ? 'display:inline-block;' : 'display:none;'; ?>">
                 <span class="icon">&#128722;</span> 
                 Carrito
             </button>
-        <?php endif; ?>
-    </div>
-</header>
+        </div>
+    </header>
 
 <div class="container">
     <h1>Gestión de Productos</h1>
@@ -342,8 +444,8 @@ if (isset($_GET['edit'])) {
                     <td><?= htmlspecialchars($row['descripcion']); ?></td>
                     <td><?= htmlspecialchars($row['precio']); ?></td>
                     <td>
-                        <a href="gestionar_productos.php?edit=<?= $row['producto_id']; ?>">Editar</a>
-                        <a href="gestionar_productos.php?delete=<?= $row['producto_id']; ?>" onclick="return confirm('¿Está seguro de que desea eliminar este producto?');">Eliminar</a>
+                        <button class="action-button" onclick="window.location.href='gestionar_productos.php?edit=<?= $row['producto_id']; ?>'">Editar</button>
+                        <button class="action-button" onclick="if(confirm('¿Está seguro de que desea eliminar este producto?')) window.location.href='gestionar_productos.php?delete=<?= $row['producto_id']; ?>'">Eliminar</button>
                     </td>
                 </tr>
             <?php endwhile; ?>

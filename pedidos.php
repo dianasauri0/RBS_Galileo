@@ -1,65 +1,49 @@
-<!DOCTYPE html>
-<html lang="es">
-<?php                               //En esta parte está la configuración y conexión a la base de datos, verificación de logueo y rol, y maneja el logout y sesion//
-
+<?php
+// Iniciar sesión
 session_start();
 
-// Configuración de la base de datos
+// Datos de conexión a la base de datos
 $servername = "sql110.infinityfree.com";
-$username = "if0_37108824";
-$password = "BjpIYhEjhN";
+$db_username = "if0_37108824";
+$db_password = "BjpIYhEjhN";
 $dbname = "if0_37108824_fdex";
 
-// Crea la conexión
-$conn = new mysqli($servername, $username, $password, $dbname);
+// Crear conexión
+$conn = new mysqli($servername, $db_username, $db_password, $dbname);
 
-// Verificar la conexión
+// Verificar conexión
 if ($conn->connect_error) {
-    echo "Conexión fallida: " . $conn->connect_error;
+    die('Conexión fallida: ' . $conn->connect_error);
+}
+
+// Verificar si el usuario está logueado
+$usuario_logueado = isset($_SESSION['usuario_id']);
+$usuario_rol = $usuario_logueado ? $_SESSION['rol'] : '';
+
+// Redirigir a la página de inicio si no está logueado
+if (!$usuario_logueado) {
+    header("Location: index.php");
     exit();
 }
 
-// Verifica si el usuario está logueado y obtener el rol si es necesario
-$usuario_rol = 'cliente'; // Valor por defecto para usuarios no logueados
-$usuario_logueado = false;
+// Obtener el ID del usuario
+$usuario_id = $_SESSION['usuario_id'];
 
-if (isset($_SESSION['usuario_id'])) {
-    $usuario_logueado = true;
-    $usuario_id = $_SESSION['usuario_id'];
-    
-    // Consultar el rol del usuario en la base de datos
-    $stmt = $conn->prepare("SELECT rol FROM usuarios WHERE usuario_id = ?");
-    $stmt->bind_param("i", $usuario_id);
-    $stmt->execute();
-    $result = $stmt->get_result();
-    
-    if ($result->num_rows === 1) {
-        $row = $result->fetch_assoc();
-        $usuario_rol = $row['rol'];
-    } else {
-        // Si el usuario no se encuentra, se maneja con una alerta y se limpia la sesión
-        session_unset();
-        session_destroy();
-        $usuario_logueado = false; // Actualizar el estado de logueo
-    }
-
-    $stmt->close();
-}
-
-//Maneja el logout
-    if (isset($_GET['logout'])) {
-        session_unset(); // Elimina todas las variables de la sesión
-        session_destroy(); // Destruye la sesión
-        echo "<script>window.location.href='index.php';</script>"; // Refresca la página
-        exit();
-    }
-
+// Obtener los pedidos pendientes y entregados del usuario
+$sql = "SELECT p.pendiente_id, p.estado, pr.descripcion, pr.precio 
+        FROM pendientes p 
+        JOIN productos pr ON p.producto_id = pr.producto_id 
+        WHERE p.usuario_id = $usuario_id AND p.estado IN ('pendiente', 'entregado')
+        ORDER BY p.pendiente_id ASC";
+$result = $conn->query($sql);
 ?>
 
+<!DOCTYPE html>
+<html lang="es">
 <head>  <!--Head de la página-->
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FDEX - Tienda Deportiva</title>
+    <title>FDEX - Mis Pedidos</title>
     <link rel="icon" href="F.png" type="image/x-icon"> <!-- Favicon -->
     <style>
     /* Estilos generales */
@@ -166,66 +150,43 @@ header {
     color: #e85d04; /* Naranja vibrante */
 }
 
-/* Estilos del contenedor principal */
-.container {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-    gap: 20px;
-    padding: 20px;
-    max-width: 80vw;
-    margin: 0 auto;
-    box-sizing: border-box;
-}
+/* Estilos de la tabla */
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin: 20px auto;
+        background-color: #ffffff; /* Fondo blanco para la tabla */
+        box-shadow: 0 0 15px rgba(0, 0, 0, 0.1); /* Sombra para dar un efecto de elevación */
+    }
 
-.courses {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    padding: 20px;
-}
+    th, td {
+        padding: 15px;
+        text-align: left;
+        border-bottom: 1px solid #dee2e6; /* Gris claro para las líneas de separación */
+    }
 
-.course {
-    background-color: #ffffff; /* Blanco para el fondo de las tarjetas */
-    margin: 10px;
-    padding: 20px;
-    border-radius: 10px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2); /* Sombra más pronunciada */
-    width: 250px;
-    text-align: center;
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-}
+    th {
+        background-color: #212529; /* Fondo oscuro para el encabezado */
+        color: #dee2e6; /* Texto claro */
+    }
 
-.course:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.3); /* Sombra más pronunciada en hover */
-}
+    tr:nth-child(even) {
+        background-color: #f1f1f1; /* Color de fondo alternado para filas pares */
+    }
 
-.course-title {
-    font-size: 18px;
-    margin-bottom: 10px;
-    color: #212529; /* Gris oscuro */
-}
+    button {
+        background-color: #e85d04; /* Botones con fondo naranja vibrante */
+        border: none;
+        color: #ffffff; /* Texto blanco */
+        cursor: pointer;
+        padding: 10px 15px;
+        border-radius: 5px;
+        transition: background-color 0.3s ease;
+    }
 
-.course-price {
-    font-size: 20px;
-    margin-bottom: 15px;
-    color: #007A33; /* Verde Esmeralda */
-}
-
-.course button {
-    background-color: #e85d04; /* Naranja vibrante */
-    color: #ffffff; /* Blanco para el texto */
-    padding: 10px 20px;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    font-size: 16px;
-    transition: background-color 0.3s ease;
-}
-
-.course button:hover {
-    background-color: #c84e01; /* Naranja más oscuro */
-}
+    button:hover {
+        background-color: #c84e01; /* Naranja más oscuro para el hover */
+    }
 
 /* Estilos del pie de página */
 footer {
@@ -318,48 +279,11 @@ footer {
 .social-icon a:hover {
     color: #e85d04; /* Naranja vibrante */
 }
-
-/* Estilos del contenedor de mensajes emergentes */
-    #message-container {
-        position: fixed;
-        bottom: 20px;
-        left: 20px;
-        display: flex;
-        flex-direction: column;
-        gap: 10px; /* Espacio entre mensajes */
-    }
-
-    /* Estilos del mensaje emergente */
-    .message {
-        background-color: #007A33; /* Verde Esmeralda */
-        color: #F5F5F5; /* Blanco Nieve */
-        padding: 15px;
-        border-radius: 5px;
-        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
-        opacity: 0;
-        visibility: hidden;
-        transition: opacity 0.5s ease, transform 0.5s ease;
-        transform: translateY(20px);
-    }
-
-    .message.show {
-        opacity: 1;
-        visibility: visible;
-        transform: translateY(0);
-    }
-
-    .message.success {
-        border-color: green;
-    }
-
-    .message.error {
-        border-color: red;
-    }
-    </style>
+</style>
 </head>
-<body>  <!--Body de la página-->
+<body>
 
-    <header>
+<header>
         <div class="header-left">                                                      <!--Header parte izquierda-->
             <button id="sliderBtn" onclick="toggleMenu()">
                 <span class="icon-slider">&#9776;</span> 
@@ -406,37 +330,32 @@ footer {
         </div>
     </header>
 
-    <div class="container">                                                            <!-- Lista de Productos -->
-        <?php
-        // Obtener los productos desde la base de datos
-        $sql = "SELECT producto_id, descripcion, precio FROM productos";
-        $result = $conn->query($sql);
+<table>
+    <tr>
+        <th>Descripción</th>
+        <th>Precio</th>
+        <th>Estado</th>
+        <th>Acción</th>
+    </tr>
 
-        if ($result->num_rows > 0) {
-            while($row = $result->fetch_assoc()) {
-                echo "<div class='course'>";
-                echo "<h3 class='course-title'>" . htmlspecialchars($row['descripcion']) . "</h3>";
-                echo "<p class='course-price'>$" . htmlspecialchars($row['precio']) . "</p>";
+    <?php while($row = $result->fetch_assoc()): ?>
+        <tr>
+            <td><?php echo $row['descripcion']; ?></td>
+            <td><?php echo $row['precio']; ?></td>
+            <td><?php echo ucfirst($row['estado']); ?></td>
+            <td>
+                <?php if ($row['estado'] !== 'entregado'): ?>
+                    <form action="cancelar_pedido.php" method="POST" style="display:inline-block;">
+                        <input type="hidden" name="pendiente_id" value="<?php echo $row['pendiente_id']; ?>">
+                        <button type="submit">Cancelar</button>
+                    </form>
+                <?php endif; ?>
+            </td>
+        </tr>
+    <?php endwhile; ?>
+</table>
 
-                // Mostrar el botón según el estado de la sesión
-                if ($usuario_logueado) {
-                    echo "<form method='POST' action='agregar_al_carrito.php' style='display:inline;'>";
-                    echo "<input type='hidden' name='producto_id' value='" . htmlspecialchars($row['producto_id']) . "'>";
-                    echo "<button type='submit'>Añadir al Carrito</button>";
-                    echo "</form>";
-                } else {
-                    echo "<button onclick='showLoginAlert()'>Añadir al Carrito</button>";
-                }
-
-                echo "</div>";
-            }
-        } else {
-            echo "<p>No hay productos disponibles.</p>";
-        }
-        ?>
-    </div>
-
-    <footer>                                                                           <!--Footer de la página -->
+<footer>                                                                           <!--Footer de la página -->
         <div class="footer-top">
             <div class="footer-content">
                 <div class="footer-section about">
@@ -468,76 +387,27 @@ footer {
             <p><a href="#">Términos y Condiciones</a> | <a href="politica.html">Política de Privacidad</a></p>
         </div>
     <!-- Fin del Footer -->
-    </footer> 
+    </footer>
 
-    <div id="message-container"></div>
-
-    <script>
-    function toggleMenu() {
-        var menu = document.getElementById("menuDropdown");
-        menu.style.display = menu.style.display === "block" ? "none" : "block";
-    }
-
-    function handleLoginLogout() {
-        var isLoggedIn = <?php echo $usuario_logueado ? 'true' : 'false'; ?>;
-        if (isLoggedIn) {
-            window.location.href = 'index.php?logout=true';
-        } else {
-            window.location.href = 'login.html';
-        }
-    }
-
-    let lastAlertTime = 0; // Para almacenar el tiempo del último clic
-
-    function showMessage(message, isSuccess) {
-        const messageContainer = document.getElementById('message-container');
-        const messageDiv = document.createElement('div');
-        messageDiv.className = 'message ' + (isSuccess ? 'success' : 'error');
-        messageDiv.textContent = message;
-        messageContainer.appendChild(messageDiv);
-
-        // Mostrar el mensaje con animación
-        requestAnimationFrame(() => {
-            messageDiv.classList.add('show');
-        });
-
-        // Ocultar el mensaje después de 3 segundos
-        setTimeout(() => {
-            messageDiv.classList.remove('show');
-            // Remover el mensaje después de la animación
-            setTimeout(() => {
-                messageContainer.removeChild(messageDiv);
-            }, 500); // Tiempo igual al de la transición de ocultamiento
-        }, 3000); // Mostrar mensaje durante 3 segundos
-    }
-
-    function addToCart(productId) {
-        const now = Date.now();
-        if (now - lastAlertTime < 1000) {
-            // Si el tiempo entre clics es menor a 1 segundo, no hacer nada
-            return;
-        }
-        lastAlertTime = now;
-
-        var xhr = new XMLHttpRequest();
-        xhr.open('POST', 'agregar_al_carrito.php', true);
-        xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-        xhr.onreadystatechange = function () {
-            if (xhr.readyState === 4 && xhr.status === 200) {
-                var response = JSON.parse(xhr.responseText);
-                showMessage(response.message, response.status === 'success');
-            }
-        };
-        xhr.send('producto_id=' + encodeURIComponent(productId));
-    }
-
-    document.querySelectorAll('form').forEach(function(form) {
-        form.addEventListener('submit', function(e) {
-            e.preventDefault(); // Evitar el envío del formulario
-            var productoId = this.querySelector('input[name="producto_id"]').value;
-            addToCart(productoId);
-        });
-    });
-</script>
 </body>
+<script>                                                                // Acá van todos los scripts de la página //
+        function toggleMenu() {
+            var menu = document.getElementById("menuDropdown");
+            menu.style.display = menu.style.display === "block" ? "none" : "block";
+        }
+
+        function handleLoginLogout() {
+            var isLoggedIn = <?php echo $usuario_logueado ? 'true' : 'false'; ?>;
+            if (isLoggedIn) {
+                window.location.href = 'index.php?logout=true';
+            } else {
+                window.location.href = 'login.html';
+            }
+        }
+        /* Fin de los scripts de la página */
+    </script>
 </html>
+
+<?php
+$conn->close();
+?>
