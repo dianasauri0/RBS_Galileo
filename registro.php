@@ -21,7 +21,7 @@ $input_confirm_password = trim(isset($_POST['confirm_password']) ? $_POST['confi
 
 // Verificar que las contraseñas coincidan
 if ($input_password !== $input_confirm_password) {
-    echo json_encode(['success' => false, 'message' => 'Las contraseñas no coinciden']);
+    echo '<script>alert("Las contraseñas no coinciden"); window.location.href = "registro.html";</script>';
     $conn->close();
     exit();
 }
@@ -35,7 +35,7 @@ $stmt->fetch();
 $stmt->close();
 
 if ($user_count > 0) {
-    echo json_encode(['success' => false, 'message' => 'El nombre de usuario ya está registrado']);
+    echo '<script>alert("El nombre de usuario ya está registrado"); window.location.href = "registro.html";</script>';
     $conn->close();
     exit();
 }
@@ -44,18 +44,17 @@ if ($user_count > 0) {
 $hashed_password = password_hash($input_password, PASSWORD_DEFAULT);
 
 // Insertar nuevo usuario
-$rol="cliente";
+$rol = "cliente";
 $stmt = $conn->prepare("INSERT INTO usuarios (nombre, contrasenia, rol) VALUES (?, ?, ?)");
 $stmt->bind_param("sss", $input_username, $hashed_password, $rol);
 
 if ($stmt->execute()) {
-    echo json_encode(['success' => true, 'message' => 'Usuario registrado exitosamente']);
+    echo '<script>alert("Usuario registrado exitosamente"); window.location.href = "login.html";</script>';
     session_start();
     $_SESSION['rol'] = $rol; // Guardar rol en la sesión
-    header('Location: login.html'); 
     exit();
 } else {
-    echo json_encode(['success' => false, 'message' => 'Error al registrar el usuario']);
+    echo '<script>alert("Error al registrar el usuario"); window.location.href = "registro.html";</script>';
 }
 
 $stmt->close();

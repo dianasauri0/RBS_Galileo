@@ -1,156 +1,156 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Contacto - FDEX</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            line-height: 1.6;
-            margin: 0;
-            padding: 0;
-            background-color: #f4f4f4;
-        }
-        .container {
-            width: 80%;
-            margin: auto;
-            overflow: hidden;
-            padding: 20px;
-            background: #fff;
-            border-radius: 8px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-        }
-        header {
-            background: #333;
-            color: #fff;
-            padding: 1rem 0;
-            text-align: center;
-        }
-        header h1 {
-            margin: 0;
-        }
-        h2 {
-            color: #333;
-        }
-        h3 {
-            color: #555;
-        }
-        p {
-            margin: 0 0 1rem;
-        }
-        a {
-            color: #007bff;
-            text-decoration: none;
-        }
-        a:hover {
-            text-decoration: underline;
-        }
-
-        /* Estilos para el formulario de contacto */
-        .contact-form {
-            margin-top: 20px;
-        }
-
-        .contact-form input,
-        .contact-form textarea {
-            width: 100%;
-            padding: 10px;
-            margin: 10px 0;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-        }
-
-        .contact-form button {
-            padding: 10px 20px;
-            border: none;
-            border-radius: 4px;
-            background-color: #007bff;
-            color: white;
-            cursor: pointer;
-        }
-
-        .contact-form button:hover {
-            background-color: #0056b3;
-        }
-    </style>
-</head>
-<body>
-
-    <header>
-        <h1>Contacto - FDEX</h1>
-    </header>
-
-    <div class="container">
-        <h2>Formulario de Contacto</h2>
-        <p>Por favor, completa el siguiente formulario para ponerte en contacto con nuestro equipo de soporte. Asegúrate de proporcionar toda la información necesaria para que podamos asistirte de manera eficiente.</p>
-
-        <form id="contactoForm">
-            <label for="contactEmail">Tu correo electrónico:</label>
-            <input type="email" id="contactEmail" name="email" placeholder="Tu correo electrónico" required>
-            
-            <label for="contactMessage">Descripción del mensaje:</label>
-            <textarea id="contactMessage" name="message" placeholder="Descripción del mensaje" rows="5" required></textarea>
-            
-            <button type="submit">Enviar</button>
-        </form>
-
-        <h3>Otras Formas de Contacto</h3>
-        <p>Si prefieres no usar el formulario de contacto, también puedes ponerte en contacto con nosotros a través de:</p>
-        <ul>
-            <li><strong>Correo Electrónico:</strong> <a href="mailto:support@fdex.com">support@fdex.com</a></li>
-            <li><strong>Teléfono:</strong> +11 41929678 (Lunes a Viernes de 9:00 a 18:00)</li>
-        </ul>
-    </div>
-
-    <!-- La ventana emergente -->
-    <div id="contactoModal" class="modal">
-        <div class="modal-content">
-            <span class="close">&times;</span>
-            <h2>Formulario de Contacto</h2>
-            <form id="modalContactForm">
-                <input type="email" id="modalContactEmail" name="email" placeholder="Tu correo electrónico" required>
-                <textarea id="modalContactMessage" name="message" placeholder="Descripción del mensaje" rows="5" required></textarea>
-                <button type="submit">Enviar</button>
-            </form>
-        </div>
-    </div>
-
-    <script>
-        // Obtener elementos del modal
-        var modal = document.getElementById("contactoModal");
-        var btn = document.getElementById("contactoLink");
-        var span = document.getElementsByClassName("close")[0];
-
-        // Abrir el modal
-        btn.onclick = function(event) {
-            event.preventDefault(); // Evitar el comportamiento por defecto del enlace
-            modal.style.display = "flex";
-        }
-
-        // Cerrar el modal
-        span.onclick = function() {
-            modal.style.display = "none";
-        }
-
-        // Cerrar el modal si se hace clic fuera de él
-        window.onclick = function(event) {
-            if (event.target == modal) {
-                modal.style.display = "none";
-            }
-        }
-
-        // Manejar el envío del formulario en el modal
-        document.getElementById('modalContactForm').onsubmit = function(event) {
-            event.preventDefault(); // Evitar el envío del formulario por defecto
-            var email = document.getElementById('modalContactEmail').value;
-            var message = document.getElementById('modalContactMessage').value;
-
-            // Aquí puedes agregar la lógica para enviar los datos del formulario a tu servidor
-            alert('Formulario enviado.\nCorreo: ' + email + '\nMensaje: ' + message);
-            modal.style.display = "none"; // Cerrar el modal después de enviar
-        }
-    </script>
-
-</body>
-</html>
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contacto - FDEX</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+        .container {
+            width: 80%;
+            margin: auto;
+            overflow: hidden;
+            padding: 20px;
+            background: #fff;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        header {
+            background: #333;
+            color: #fff;
+            padding: 1rem 0;
+            text-align: center;
+        }
+        header h1 {
+            margin: 0;
+        }
+        h2 {
+            color: #333;
+        }
+        h3 {
+            color: #555;
+        }
+        p {
+            margin: 0 0 1rem;
+        }
+        a {
+            color: #007bff;
+            text-decoration: none;
+        }
+        a:hover {
+            text-decoration: underline;
+        }
+
+        /* Estilos para el formulario de contacto */
+        .contact-form {
+            margin-top: 20px;
+        }
+
+        .contact-form input,
+        .contact-form textarea {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+
+        .contact-form button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            background-color: #007bff;
+            color: white;
+            cursor: pointer;
+        }
+
+        .contact-form button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>Contacto - FDEX</h1>
+    </header>
+
+    <div class="container">
+        <h2>Formulario de Contacto</h2>
+        <p>Por favor, completa el siguiente formulario para ponerte en contacto con nuestro equipo de soporte. Asegúrate de proporcionar toda la información necesaria para que podamos asistirte de manera eficiente.</p>
+
+        <form id="contactoForm">
+            <label for="contactEmail">Tu correo electrónico:</label>
+            <input type="email" id="contactEmail" name="email" placeholder="Tu correo electrónico" required>
+            
+            <label for="contactMessage">Descripción del mensaje:</label>
+            <textarea id="contactMessage" name="message" placeholder="Descripción del mensaje" rows="5" required></textarea>
+            
+            <button type="submit">Enviar</button>
+        </form>
+
+        <h3>Otras Formas de Contacto</h3>
+        <p>Si prefieres no usar el formulario de contacto, también puedes ponerte en contacto con nosotros a través de:</p>
+        <ul>
+            <li><strong>Correo Electrónico:</strong> <a href="mailto:support@fdex.com">support@fdex.com</a></li>
+            <li><strong>Teléfono:</strong> +11 41929678 (Lunes a Viernes de 9:00 a 18:00)</li>
+        </ul>
+    </div>
+
+    <!-- La ventana emergente -->
+    <div id="contactoModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>Formulario de Contacto</h2>
+            <form id="modalContactForm">
+                <input type="email" id="modalContactEmail" name="email" placeholder="Tu correo electrónico" required>
+                <textarea id="modalContactMessage" name="message" placeholder="Descripción del mensaje" rows="5" required></textarea>
+                <button type="submit">Enviar</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // Obtener elementos del modal
+        var modal = document.getElementById("contactoModal");
+        var btn = document.getElementById("contactoLink");
+        var span = document.getElementsByClassName("close")[0];
+
+        // Abrir el modal
+        btn.onclick = function(event) {
+            event.preventDefault(); // Evitar el comportamiento por defecto del enlace
+            modal.style.display = "flex";
+        }
+
+        // Cerrar el modal
+        span.onclick = function() {
+            modal.style.display = "none";
+        }
+
+        // Cerrar el modal si se hace clic fuera de él
+        window.onclick = function(event) {
+            if (event.target == modal) {
+                modal.style.display = "none";
+            }
+        }
+
+        // Manejar el envío del formulario en el modal
+        document.getElementById('modalContactForm').onsubmit = function(event) {
+            event.preventDefault(); // Evitar el envío del formulario por defecto
+            var email = document.getElementById('modalContactEmail').value;
+            var message = document.getElementById('modalContactMessage').value;
+
+            // Aquí puedes agregar la lógica para enviar los datos del formulario a tu servidor
+            alert('Formulario enviado.\nCorreo: ' + email + '\nMensaje: ' + message);
+            modal.style.display = "none"; // Cerrar el modal después de enviar
+        }
+    </script>
+
+</body>
+</html>

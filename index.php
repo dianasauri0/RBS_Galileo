@@ -46,6 +46,19 @@ if (isset($_SESSION['usuario_id'])) {
     $stmt->close();
 }
 
+//Maneja el resultado de compra
+if (isset($_GET['status'])) {
+    $status = $_GET['status'];
+
+    if ($status == 'success') {
+        echo "<script>alert('¡Compra exitosa!');</script>";
+    } elseif ($status == 'failure') {
+        echo "<script>alert('La compra ha fallado. Por favor, intenta nuevamente.');</script>";
+    } elseif ($status == 'pending') {
+        echo "<script>alert('Tu compra está pendiente. Te notificaremos cuando se complete.');</script>";
+    }
+}
+
 //Maneja el logout
     if (isset($_GET['logout'])) {
         session_unset(); // Elimina todas las variables de la sesión
@@ -53,7 +66,6 @@ if (isset($_SESSION['usuario_id'])) {
         echo "<script>window.location.href='index.php';</script>"; // Refresca la página
         exit();
     }
-
 ?>
 
 <head>  <!--Head de la página-->
@@ -349,11 +361,12 @@ footer {
     }
 
     .message.success {
-        border-color: green;
+        background-color: #007A33; /* Verde para mensajes de éxito */
     }
 
     .message.error {
-        border-color: red;
+        background-color: #dc3545; /* Rojo para mensajes de error */
+        color: #ffffff; /* Blanco para el texto */
     }
     </style>
 </head>
@@ -361,10 +374,12 @@ footer {
 
     <header>
         <div class="header-left">                                                      <!--Header parte izquierda-->
-            <button id="sliderBtn" onclick="toggleMenu()">
-                <span class="icon-slider">&#9776;</span> 
-                Menú
-            </button>
+            <?php if ($usuario_logueado): ?>
+                <button id="sliderBtn" onclick="toggleMenu()">
+                    <span class="icon-slider">&#9776;</span> 
+                    Menú
+                </button>
+            <?php endif; ?>
             <div id="menuDropdown">
             <ul id="menuOptions">
                 <?php if ($usuario_logueado && $usuario_rol === 'administrador'): ?>
@@ -373,10 +388,6 @@ footer {
                     <li><a href="gestionar_productos.php">Gestionar Productos</a></li>
                 <?php elseif ($usuario_logueado && $usuario_rol === 'cliente'): ?>
                     <li><a href="pedidos.php">Mis pedidos</a></li>
-                <?php else: ?>
-                    <!-- Opciones disponibles para usuarios no logueados -->
-                    <li><a href="login.html">Iniciar Sesión</a></li>
-                    <li><a href="registro.html">Registrarse</a></li>
                 <?php endif; ?>
             </ul>
             </div>
@@ -538,6 +549,10 @@ footer {
             addToCart(productoId);
         });
     });
+
+    function showLoginAlert() {
+        showMessage('Debes iniciar sesión para añadir productos al carrito.', false); // false indica que es un mensaje de error
+    }
 </script>
 </body>
 </html>

@@ -50,6 +50,37 @@ if ($stmt->execute()) {
     echo "Error en la consulta: " . $stmt->error;
 }
 
+// Procesar la compra
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['comprar'])) {
+    // Generar un nuevo order_id
+    function generateOrderId() {
+        return 'ORD-' . strtoupper(bin2hex(random_bytes(4)));
+    }
+
+    $orderId = generateOrderId();
+    $usuario_id = $_SESSION['usuario_id']; // Asegúrate de que esta variable esté definida y tenga el ID del usuario
+
+    // Actualizar estado de los productos a 'pendiente' y asignar order_id
+    $sql = "UPDATE pendientes 
+            SET estado = 'pendiente', order_id = ? 
+            WHERE usuario_id = ? AND estado = 'carrito'";
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param('si', $orderId, $usuario_id);
+
+    if ($stmt->execute()) {
+        // Insertar el nuevo order_id en la tabla ventas
+        $sql = "INSERT INTO ventas (order_id) VALUES (?)";
+        $stmt = $conn->prepare($sql);
+        $stmt->bind_param('s', $orderId);
+        $stmt->execute();
+        $stmt->close();
+
+        echo "Compra procesada con éxito. Order ID: " . $orderId;
+    } else {
+        echo "Error al procesar la compra.";
+    }
+}
+
 // Manejo de eliminación de productos
 if (isset($_GET['eliminar'])) {
     $pendiente_id = intval($_GET['eliminar']);
@@ -79,6 +110,54 @@ if (isset($_GET['eliminar'])) {
         $stmt->close();
     }
 }
+
+    // Manejo de eliminación de todos los productos
+    if (isset($_GET['accion']) && $_GET['accion'] === 'vaciar') {
+        $sql = "DELETE FROM pendientes WHERE usuario_id = ? AND estado = 'carrito'";
+        $stmt = $conn->prepare($sql);
+        $stmt->bind_param('i', $usuario_id);
+
+        if ($stmt->execute()) {
+            // Redirigir de vuelta al carrito
+            header("Location: carrito.php");
+            exit();
+        } else {
+            echo "Error en la eliminación: " . $stmt->error;
+        }
+        $stmt->close();
+    }
+
+// Incluyendo el autoload generado por Composer
+require __DIR__ . '/vendor/autoload.php';
+
+// Configuración de Mercado Pago
+MercadoPago\SDK::setAccessToken('APP_USR-918329511520455-081920-0852659fb84abe1bb0450bc3fc50e089-744346595'); // Reemplaza con tu Access Token
+
+// Crea un objeto de preferencia
+$preference = new MercadoPago\Preference();
+
+// Crea un array de items para la preferencia
+$items = [];
+foreach ($productos as $producto) {
+    $item = new MercadoPago\Item();
+    $item->title = $producto['nombre'];
+    $item->quantity = $producto['cantidad'];
+    $item->unit_price = $producto['precio'];
+    $items[] = $item;
+}
+
+$preference->items = $items;
+
+// Configura las URLs de redirección
+$preference->back_urls = array(
+    "success" => "https://tu-sitio.com/index.php?status=success",
+    "failure" => "https://tu-sitio.com/index.php?status=failure",
+    "pending" => "https://tu-sitio.com/index.php?status=pending"
+);
+$preference->auto_return = "approved";
+
+// Guarda y genera la preferencia
+$preference->save();
 
 $conn->close();
 ?>
@@ -225,13 +304,13 @@ $conn->close();
     border-bottom: 1px solid #dee2e6; /* Línea separadora entre productos */
 }
 
-.product:last-child {
-    border-bottom: none; /* Eliminar la línea en el último producto */
-}
-
 .product span {
     font-size: 16px;
     color: #212529; /* Gris oscuro para el texto */
+}
+
+.product .remove-button {
+    margin-left: auto; /* Empuja el botón a la derecha */
 }
 
 .product button {
@@ -273,6 +352,27 @@ $conn->close();
 
 .buy-now:hover {
     background-color: #005f24; /* Verde más oscuro para el hover */
+}
+
+#wallet_container {
+    text-align: center; /* Centra el contenido dentro del contenedor */
+    margin-top: 20px; /* Espacio arriba del botón de pago */
+}
+
+/* Estilos del botón Eliminar y Vaciar Carrito */
+button {
+    background-color: #e85d04; /* Naranja vibrante */
+    color: #ffffff; /* Blanco para el texto */
+    border: none;
+    padding: 5px 10px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: background-color 0.3s ease;
+}
+
+button:hover {
+    background-color: #c84e01; /* Naranja más oscuro para el hover */
 }
 
         /* Estilos del pie de página */
@@ -399,28 +499,50 @@ footer {
     </header>
 
 <div class="container">
-    <h1>Tu Carrito de Compras</h1>
+        <h1>Carrito de Compras</h1>
+        
+        <div id="cartContent">
+            <?php if (empty($productos)): ?>
+                <p class="empty-cart">Tu carrito está vacío.</p>
+            <?php else: ?>
+                <?php $total = 0; ?>
+                <?php foreach ($productos as $producto): ?>
+                    <div class="product">
+                        <span><?php echo htmlspecialchars($producto['nombre']); ?> (<?php echo $producto['cantidad']; ?>)
+                        <span>$<?php echo number_format($producto['subtotal'], 2); ?></span>
+                        <a href="carrito.php?eliminar=<?php echo $producto['pendiente_id']; ?>"><button>Eliminar</button></a>
+                    </div>
+                    <?php $total += $producto['subtotal']; ?>
+                <?php endforeach; ?>
+                <?php if (!empty($productos)): ?>
+                    <form method="get" action="carrito.php" style="margin-bottom: 20px;">
+                        <input type="hidden" name="accion" value="vaciar">
+                        <button type="submit" class="button">
+                            Vaciar Carrito
+                        </button>
+                    </form>
+                <?php endif; ?>
+                <p class="total">Total: $<?php echo number_format($total, 2); ?></p>
+                <!-- Botón de pago con Mercado Pago -->
+                <div id="wallet_container"></div>
+                <script>
+                    const mp = new MercadoPago('APP_USR-a7ef5ae1-1ff6-4884-be3e-bb0950b725b1', {
+                        locale: 'es-AR'
+                    });
 
-    <div id="cartContent">
-        <?php if (!empty($productos)): ?>
-            <?php 
-            $total = 0;
-            foreach ($productos as $producto): 
-                $total += $producto['subtotal'];
-            ?>
-                <div class='product'>
-                    <span><?php echo htmlspecialchars($producto['nombre']); ?> (x<?php echo $producto['cantidad']; ?>)</span>
-                    <span><?php echo htmlspecialchars($producto['subtotal']); ?>€</span>
-                    <button onclick='eliminarProducto(<?php echo $producto['pendiente_id']; ?>)'>Eliminar</button>
-                </div>
-            <?php endforeach; ?>
-            <div class="total">Total: $<?php echo $total; ?></div>
-            <a href="#" class="buy-now">Comprar Ahora</a>
-        <?php else: ?>
-            <p>Tu carrito está vacío.</p>
-        <?php endif; ?>
+                    mp.checkout({
+                        preference: {
+                            id: '<?php echo $preference->id; ?>'
+                        },
+                        render: {
+                            container: '#wallet_container', // Indica dónde se mostrará el botón
+                            label: 'Pagar con Mercado Pago', // Cambia el texto del botón de pago (opcional)
+                        }
+                    });
+                </script>
+            <?php endif; ?>
+        </div>
     </div>
-</div>
 
 <footer>                                                                           <!--Footer de la página -->
         <div class="footer-top">

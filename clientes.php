@@ -306,7 +306,7 @@ $result = $conn->query($sql);
                 Carrito
             </button>
         </div>
-    </header>
+</header>
 
 <!-- Contenido de Clientes.php -->
 <h1 class="centered-heading">Administración de Clientes</h1>
@@ -328,16 +328,21 @@ $result = $conn->query($sql);
         <td><?php echo $row['order_id']; ?></td>
         <td><?php echo $row['usuario_id']; ?></td>
         <td>
-            <form method="POST" style="display:inline-block;">
-                <input type="hidden" name="pendiente_id" value="<?php echo $row['pendiente_id']; ?>">
-                <input type="hidden" name="action" value="entregar">
-                <input type="submit" value="Entregar" class="btn-action btn-entregar">
-            </form>
-            <form method="POST" style="display:inline-block;">
-                <input type="hidden" name="pendiente_id" value="<?php echo $row['pendiente_id']; ?>">
-                <input type="hidden" name="action" value="anular">
-                <input type="submit" value="Anular" class="btn-action btn-anular">
-            </form>
+            <?php if ($row['estado'] === 'pendiente'): ?>
+                <form method="POST" style="display:inline-block;">
+                    <input type="hidden" name="pendiente_id" value="<?php echo $row['pendiente_id']; ?>">
+                    <input type="hidden" name="action" value="entregar">
+                    <input type="submit" value="Entregar" class="btn-action btn-entregar">
+                </form>
+            <?php endif; ?>
+
+            <?php if ($row['estado'] === 'pendiente' || $row['estado'] === 'entregado'): ?>
+                <form method="POST" style="display:inline-block;">
+                    <input type="hidden" name="pendiente_id" value="<?php echo $row['pendiente_id']; ?>">
+                    <input type="hidden" name="action" value="anular">
+                    <input type="submit" value="Anular" class="btn-action btn-anular">
+                </form>
+            <?php endif; ?>
         </td>
     </tr>
     <?php endwhile; ?>
@@ -357,6 +362,7 @@ $result = $conn->query($sql);
             window.location.href = 'login.html';
         }
     }
+
 </script>
 
 </body>

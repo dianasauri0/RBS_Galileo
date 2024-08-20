@@ -1,192 +1,192 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Soporte Técnico</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            line-height: 1.6;
-            margin: 0;
-            padding: 0;
-            background-color: #f4f4f4;
-        }
-        .container {
-            width: 80%;
-            margin: auto;
-            overflow: hidden;
-            padding: 20px;
-            background: #fff;
-            border-radius: 8px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-        }
-        header {
-            background: #333;
-            color: #fff;
-            padding: 1rem 0;
-            text-align: center;
-        }
-        header h1 {
-            margin: 0;
-        }
-        h2 {
-            color: #333;
-        }
-        h3 {
-            color: #555;
-        }
-        p {
-            margin: 0 0 1rem;
-        }
-        a {
-            color: #007bff;
-            text-decoration: none;
-        }
-        a:hover {
-            text-decoration: underline;
-        }
-
-        /* Estilos para la ventana emergente */
-        .modal {
-            display: none; /* Oculto por defecto */
-            position: fixed;
-            z-index: 1;
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
-            overflow: auto;
-            background-color: rgba(0,0,0,0.4);
-            justify-content: center;
-            align-items: center;
-        }
-
-        .modal-content {
-            background-color: #fefefe;
-            margin: 15% auto;
-            padding: 20px;
-            border: 1px solid #888;
-            width: 80%;
-            max-width: 500px;
-            border-radius: 8px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
-        }
-
-        .close {
-            color: #aaa;
-            float: right;
-            font-size: 28px;
-            font-weight: bold;
-        }
-
-        .close:hover,
-        .close:focus {
-            color: black;
-            text-decoration: none;
-            cursor: pointer;
-        }
-
-        .modal input,
-        .modal textarea {
-            width: 100%;
-            padding: 10px;
-            margin: 10px 0;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-        }
-
-        .modal button {
-            padding: 10px 20px;
-            border: none;
-            border-radius: 4px;
-            background-color: #007bff;
-            color: white;
-            cursor: pointer;
-        }
-
-        .modal button:hover {
-            background-color: #0056b3;
-        }
-    </style>
-</head>
-<body>
-
-    <header>
-        <h1>Soporte Técnico</h1>
-    </header>
-
-    <div class="container">
-        <h2>1. Introducción</h2>
-        <p>En FDEX, nuestro objetivo es garantizar tu satisfacción completa con nuestros productos y servicios. Sabemos que pueden surgir problemas técnicos, por eso hemos creado esta página para ayudarte a resolver cualquier inconveniente que puedas tener. A continuación, encontrarás información detallada sobre cómo ponerte en contacto con nuestro equipo de soporte técnico, así como soluciones a problemas comunes.</p>
-
-        <h2>2. Contacto con Soporte Técnico</h2>
-        <p>Si necesitas asistencia técnica, te ofrecemos múltiples formas de contacto para adaptarnos a tus preferencias:</p>
-        <ul>
-            <li><strong>Correo Electrónico:</strong> Envía un correo a <a href="mailto:support@fdex.com">support@fdex.com</a>. Nuestro equipo revisará tu consulta y responderá en un plazo de 24 horas. Incluye en tu mensaje detalles específicos sobre el problema y cualquier error que hayas encontrado.</li>
-            <li><strong>Teléfono:</strong> Llámanos al +11 41929678. Nuestro horario de atención es de Lunes a Viernes de 9:00 a 18:00 (hora local). Por favor, ten a mano tu número de pedido o cualquier otra información relevante cuando llames.</li>
-            
-        </ul>
-
-        <h2>3. Preguntas Frecuentes (FAQ)</h2>
-        <p>Antes de contactarnos, te recomendamos revisar nuestra sección de <a href="preguntas.html">Preguntas Frecuentes</a>. Aquí podrás encontrar respuestas a las consultas más comunes, como:</p>
-        <ul>
-            <li>¿Cómo rastrear mi pedido?</li>
-            <li>¿Qué hacer si recibo un producto defectuoso?</li>
-            <li>¿Cómo puedo devolver un artículo?</li>
-        </ul>
-
-        <h2>4. Resolución de Problemas Comunes</h2>
-        <p>Aquí te ofrecemos soluciones a algunos problemas técnicos que podrías encontrar:</p>
-        <ul>
-            <li><strong>Problemas con el Pedido:</strong> Si tu pedido no ha llegado o hay un problema con la entrega, verifica el estado de tu pedido en tu cuenta. Asegúrate de que la dirección de envío sea correcta y revisa tu correo electrónico para actualizaciones.</li>
-            <li><strong>Problemas con el Producto:</strong> Si has recibido un producto dañado o defectuoso, por favor, contáctanos de inmediato. Incluye fotos del daño o defecto y cualquier información relevante sobre el problema para que podamos ofrecerte una solución adecuada.</li>
-            <li><strong>Problemas con la Cuenta:</strong> Si tienes problemas para acceder a tu cuenta, asegúrate de que estás utilizando la información de inicio de sesión correcta. Revisa tu correo electrónico para cualquier notificación de seguridad y considera restablecer tu contraseña si es necesario.</li>
-            <li><strong>Problemas de Pago:</strong> Si experimentas problemas con los pagos, verifica que tu información de tarjeta sea correcta y que tu banco no esté bloqueando la transacción. Contacta a tu entidad bancaria si el problema persiste.</li>
-        </ul>
-
-        <h2>5. Horario de Atención</h2>
-        <p>Nuestro equipo de soporte técnico está disponible de Lunes a Viernes, de 9:00 a 18:00 (hora local). Las solicitudes enviadas fuera de este horario serán atendidas el siguiente día hábil. Si necesitas asistencia urgente, asegúrate de contactarnos durante el horario de atención para obtener una respuesta más rápida.</p>
-
-       
-    </div>
-
-    <!-- La ventana emergente -->
-    <div id="contactoModal" class="modal">
-        <div class="modal-content">
-            <span class="close">&times;</span>
-            <h2>Formulario de Contacto</h2>
-            <form id="contactoForm">
-                <input type="email" id="contactEmail" name="email" placeholder="Tu correo electrónico" required>
-                <textarea id="contactMessage" name="message" placeholder="Descripción del mensaje" rows="5" required></textarea>
-                <button type="submit">Enviar</button>
-            </form>
-        </div>
-    </div>
-
-    <script>
-        // Obtener elementos
-        var modal = document.getElementById("contactoModal");
-        var btn = document.getElementById("contactoLink");
-        var span = document.getElementsByClassName("close")[0];
-        
-        // Abrir la ventana emergente
-        btn.onclick = function(event) {
-            event.preventDefault(); // Evitar el comportamiento por defecto del enlace
-            modal.style.display = "flex";
-        }
-        
-        // Cerrar la ventana emergente
-        span.onclick = function() {
-            modal.style.display = "none";
-        }
-        
-        // Cerrar la ventana emergente si se hace clic fuera de ella
-        window.onclick = function(event) {
-            if (event.target == modal) {
-                modal.style.display = "none";
-            }
-        }
-
-        // Manejar el envío del formulario
-        document.getElementById('contactoForm').
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Soporte Técnico</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+        .container {
+            width: 80%;
+            margin: auto;
+            overflow: hidden;
+            padding: 20px;
+            background: #fff;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        header {
+            background: #333;
+            color: #fff;
+            padding: 1rem 0;
+            text-align: center;
+        }
+        header h1 {
+            margin: 0;
+        }
+        h2 {
+            color: #333;
+        }
+        h3 {
+            color: #555;
+        }
+        p {
+            margin: 0 0 1rem;
+        }
+        a {
+            color: #007bff;
+            text-decoration: none;
+        }
+        a:hover {
+            text-decoration: underline;
+        }
+
+        /* Estilos para la ventana emergente */
+        .modal {
+            display: none; /* Oculto por defecto */
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0,0,0,0.4);
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            background-color: #fefefe;
+            margin: 15% auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 80%;
+            max-width: 500px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+        }
+
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+        }
+
+        .close:hover,
+        .close:focus {
+            color: black;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        .modal input,
+        .modal textarea {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+
+        .modal button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            background-color: #007bff;
+            color: white;
+            cursor: pointer;
+        }
+
+        .modal button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>Soporte Técnico</h1>
+    </header>
+
+    <div class="container">
+        <h2>1. Introducción</h2>
+        <p>En FDEX, nuestro objetivo es garantizar tu satisfacción completa con nuestros productos y servicios. Sabemos que pueden surgir problemas técnicos, por eso hemos creado esta página para ayudarte a resolver cualquier inconveniente que puedas tener. A continuación, encontrarás información detallada sobre cómo ponerte en contacto con nuestro equipo de soporte técnico, así como soluciones a problemas comunes.</p>
+
+        <h2>2. Contacto con Soporte Técnico</h2>
+        <p>Si necesitas asistencia técnica, te ofrecemos múltiples formas de contacto para adaptarnos a tus preferencias:</p>
+        <ul>
+            <li><strong>Correo Electrónico:</strong> Envía un correo a <a href="mailto:support@fdex.com">support@fdex.com</a>. Nuestro equipo revisará tu consulta y responderá en un plazo de 24 horas. Incluye en tu mensaje detalles específicos sobre el problema y cualquier error que hayas encontrado.</li>
+            <li><strong>Teléfono:</strong> Llámanos al +11 41929678. Nuestro horario de atención es de Lunes a Viernes de 9:00 a 18:00 (hora local). Por favor, ten a mano tu número de pedido o cualquier otra información relevante cuando llames.</li>
+            
+        </ul>
+
+        <h2>3. Preguntas Frecuentes (FAQ)</h2>
+        <p>Antes de contactarnos, te recomendamos revisar nuestra sección de <a href="preguntas.html">Preguntas Frecuentes</a>. Aquí podrás encontrar respuestas a las consultas más comunes, como:</p>
+        <ul>
+            <li>¿Cómo rastrear mi pedido?</li>
+            <li>¿Qué hacer si recibo un producto defectuoso?</li>
+            <li>¿Cómo puedo devolver un artículo?</li>
+        </ul>
+
+        <h2>4. Resolución de Problemas Comunes</h2>
+        <p>Aquí te ofrecemos soluciones a algunos problemas técnicos que podrías encontrar:</p>
+        <ul>
+            <li><strong>Problemas con el Pedido:</strong> Si tu pedido no ha llegado o hay un problema con la entrega, verifica el estado de tu pedido en tu cuenta. Asegúrate de que la dirección de envío sea correcta y revisa tu correo electrónico para actualizaciones.</li>
+            <li><strong>Problemas con el Producto:</strong> Si has recibido un producto dañado o defectuoso, por favor, contáctanos de inmediato. Incluye fotos del daño o defecto y cualquier información relevante sobre el problema para que podamos ofrecerte una solución adecuada.</li>
+            <li><strong>Problemas con la Cuenta:</strong> Si tienes problemas para acceder a tu cuenta, asegúrate de que estás utilizando la información de inicio de sesión correcta. Revisa tu correo electrónico para cualquier notificación de seguridad y considera restablecer tu contraseña si es necesario.</li>
+            <li><strong>Problemas de Pago:</strong> Si experimentas problemas con los pagos, verifica que tu información de tarjeta sea correcta y que tu banco no esté bloqueando la transacción. Contacta a tu entidad bancaria si el problema persiste.</li>
+        </ul>
+
+        <h2>5. Horario de Atención</h2>
+        <p>Nuestro equipo de soporte técnico está disponible de Lunes a Viernes, de 9:00 a 18:00 (hora local). Las solicitudes enviadas fuera de este horario serán atendidas el siguiente día hábil. Si necesitas asistencia urgente, asegúrate de contactarnos durante el horario de atención para obtener una respuesta más rápida.</p>
+
+       
+    </div>
+
+    <!-- La ventana emergente -->
+    <div id="contactoModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>Formulario de Contacto</h2>
+            <form id="contactoForm">
+                <input type="email" id="contactEmail" name="email" placeholder="Tu correo electrónico" required>
+                <textarea id="contactMessage" name="message" placeholder="Descripción del mensaje" rows="5" required></textarea>
+                <button type="submit">Enviar</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // Obtener elementos
+        var modal = document.getElementById("contactoModal");
+        var btn = document.getElementById("contactoLink");
+        var span = document.getElementsByClassName("close")[0];
+        
+        // Abrir la ventana emergente
+        btn.onclick = function(event) {
+            event.preventDefault(); // Evitar el comportamiento por defecto del enlace
+            modal.style.display = "flex";
+        }
+        
+        // Cerrar la ventana emergente
+        span.onclick = function() {
+            modal.style.display = "none";
+        }
+        
+        // Cerrar la ventana emergente si se hace clic fuera de ella
+        window.onclick = function(event) {
+            if (event.target == modal) {
+                modal.style.display = "none";
+            }
+        }
+
+        // Manejar el envío del formulario
+        document.getElementById('contactoForm').
