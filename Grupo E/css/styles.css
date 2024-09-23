@@ -1,0 +1,272 @@
+body {
+    font-family: 'Arial', sans-serif;
+    margin: 0;
+    padding-top: 60px;
+    background-color: #f4f4f4;
+}
+
+.floating-header {
+    position: fixed;
+    top: 0;
+    width: 100%;
+    background-color: #fff;
+    padding: 10px 0;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    z-index: 1000;
+    text-align: center;
+}
+.floating-header button {
+    margin: 0 5px;
+}
+
+.container {
+    width: 80%;
+    margin: auto;
+    overflow: hidden;
+    padding: 20px;
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 0 10px 0 rgba(0,0,0,0.1);
+    margin-top: 20px;
+}
+
+h1 {
+    color: #333;
+    text-align: center;
+}
+
+form {
+    margin-top: 20px;
+}
+
+input[type="text"], input[type="submit"], button {
+    padding: 10px;
+    margin: 5px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+
+button {
+    margin-top: 5px;
+}
+
+input[type="submit"], button {
+    cursor: pointer;
+    background-color: #5C67F2;
+    color: white;
+    border: none;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+th, td {
+    padding: 12px;
+    border: 1px solid #ddd;
+    text-align: left;
+}
+
+th {
+    background-color: #f2f2f2;
+}
+
+tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+.checkbox {
+    width: 50px;
+    text-align: center;
+}
+
+.tooltip {
+    position: absolute;
+    width: 250px;
+    padding: 10px;
+    background-color: #f0f0f0;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-shadow: 2px 2px 10px rgba(0,0,0,0.2);
+    font-size: 14px;
+    color: #333;
+    z-index: 1000;
+}
+
+.tooltip div {
+    margin-bottom: 4px;
+}
+
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0,0,0,0.4);
+}
+
+.modal-content {
+    background-color: #fefefe;
+    margin: 10% auto;
+    padding: 40px;
+    border: 1px solid #888;
+    width: 50%;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+}
+
+.input-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    margin: 20px auto;
+    max-width: 500px;
+}
+
+.first-input-row {
+    margin-top: 35px;
+}
+
+.input-row label {
+    flex-basis: 20%;
+    text-align: right;
+    margin-right: 10px;
+    font-weight: bold;
+}
+
+.input-row input {
+    flex-grow: 1;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    transition: border-color 0.3s;
+}
+
+.input-row input:focus {
+    border-color: #5C67F2;
+    outline: none;
+}
+
+.btn {
+    padding: 12px;
+    background-color: #5C67F2;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.close {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.close:hover {
+    color: black;
+}
+
+.close:hover,
+.close:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.message-box {
+    display: none;
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    width: 300px;
+    padding: 15px;
+    background-color: #f44336;
+    color: white;
+    border-radius: 5px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+    opacity: 0;
+    transition: opacity 0.5s, transform 0.5s;
+}
+
+.message-box.show {
+    display: block;
+    opacity: 1;
+    transform: translateX(0);
+}
+
+.message-content {
+    margin-bottom: 10px;
+}
+
+.progress-bar {
+    height: 5px;
+    background-color: #ff7961;
+    width: 100%;
+    transition: width 5s linear;
+}
+
+#deleteButton2 {
+    display: none;
+}
+
+.error-messages p {
+    color: red;
+}
+
+.shake {
+    animation: shake 0.5s;
+    animation-iteration-count: 1;
+}
+
+.input-error {
+    border-color: red;
+}
+
+
+@keyframes shake {
+    0% { transform: translate(1px, 1px) rotate(0deg); }
+    10% { transform: translate(-1px, -2px) rotate(-1deg); }
+    20% { transform: translate(-3px, 0px) rotate(1deg); }
+    30% { transform: translate(3px, 2px) rotate(0deg); }
+    40% { transform: translate(1px, -1px) rotate(1deg); }
+    50% { transform: translate(-1px, 2px) rotate(-1deg); }
+    60% { transform: translate(-3px, 1px) rotate(0deg); }
+    70% { transform: translate(3px, 1px) rotate(-1deg); }
+    80% { transform: translate(-1px, -1px) rotate(1deg); }
+    90% { transform: translate(1px, 2px) rotate(0deg); }
+    100% { transform: translate(1px, -2px) rotate(-1deg); }
+}
+
+.BTNagregarProfesor {
+    background-color: rgb(11, 219, 11);
+}
+
+.BTNagregarProfesor:hover {
+    background-color: rgb(0, 206, 0);
+}
+
+.BTNeliminarProfesor {
+    background-color: #f44336;
+}
+
+.BTNeliminarProfesor:hover {
+    background-color: rgb(255, 0, 0);
+}
+
+.BTNmodificarProfesor {
+    background-color: #5C67F2;
+}
+
+.BTNmodificarProfesor:hover {
+    background-color: #4a54e1;
+}
